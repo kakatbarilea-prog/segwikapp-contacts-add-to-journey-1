@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -10,6 +10,12 @@
     --bg:#f6f8fb; --card:#fff; --ink:#243048; --muted:#667085; --line:#e6ebf2;
     --accent:#0F2D56; --btn:#1d305e; --pill:#eef4ff; --pill-border:#cfe1ff;
     --phone-w:430px; --phone-h:800px; --footer-h:76px; --status-h:46px; --head-h:52px;
+
+    /* NEW animation tuning */
+    --slide-dur:.36s;
+    --slide-ease:cubic-bezier(.22,.61,.36,1);
+    --acc-dur:.28s;
+    --acc-ease:cubic-bezier(.25,.8,.25,1);
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
@@ -27,6 +33,7 @@
   .status .logo .bot::before{content:"";width:10px;height:6px;border-radius:3px;display:block;background:#0F2D56;box-shadow:0 0 0 2px #b7ccff inset}
 
   .page-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
+  .page-head.hidden{display:none}
   .page-title{height:var(--head-h); padding:12px 16px 8px; display:flex; align-items:center; justify-content:space-between}
   .left-row{display:flex;align-items:center;gap:10px}
   .back{width:32px;height:32px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;display:grid;place-items:center;cursor:pointer}
@@ -66,21 +73,77 @@
   .acc{border:1px solid #e6ebf2;border-radius:12px;background:#fff;margin-bottom:10px;overflow:hidden}
   .acc-head{display:flex;align-items:center;justify-content:space-between;padding:12px 12px;cursor:pointer}
   .acc-title{font-weight:800;color:#243048;font-size:14px}
-  .acc-head svg{width:18px;height:18px;transition:transform .25s ease;opacity:.8}
+  .acc-head svg{width:18px;height:18px;transition:transform var(--acc-dur) var(--acc-ease);opacity:.8}
   .acc.open .acc-head svg{transform:rotate(90deg)}
-  .acc-panel{overflow:hidden;max-height:0;transition:max-height .3s ease}
-  .acc.open .acc-panel{max-height:800px}
+  .acc-panel{
+    overflow:hidden;
+    max-height:0;
+    transition:max-height var(--acc-dur) var(--acc-ease), padding var(--acc-dur) var(--acc-ease);
+    will-change:max-height;
+  }
+  .acc.open .acc-panel{ /* keep for fallback; JS sets exact max-height for buttery anims */
+    /* max-height is set inline for smooth animation */
+  }
 
   /* Journey item list */
-  .jitem{display:flex;align-items:center;justify-content:space-between;padding:12px;border-top:1px solid #eef2f7;cursor:pointer}
-  .jitem .name{font-size:13px;color:#243048}
+  .jitem{display:flex;align-items:center;justify-content:space-between;padding:12px;border-top:1px solid #eef2f7;cursor:pointer;gap:8px}
+  .jitem .name{font-size:13px;color:#243048;flex:1;min-width:0}
   .jitem svg{width:16px;height:16px;opacity:.6}
 
-  /* Journey detail reveal */
+  /* Journey detail reveal (used in old overlay; kept intact) */
   .jdetail{background:#f8fbff;border-top:1px dashed #dbe7ff;padding:10px 12px;line-height:1.4}
   .jdetail .h{font-weight:800;color:#0F2D56;margin-bottom:6px}
   .jdetail .p{font-size:12px;color:#475569;margin:4px 0}
   .add-btn{margin-top:10px;display:inline-block;background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer}
+  .add-btn.small{margin-top:0;padding:6px 10px;font-size:12px;border-radius:8px;flex:0 0 120px;text-align:center} /* fixed width for uniform size */
+
+  /* ---------- NEW: In-app screen navigation (slide in/out) ---------- */
+  .screens{position:relative;flex:1;overflow:hidden;background:#f6f8fb}
+  .screen{
+    position:absolute; inset:0; display:flex; flex-direction:column; background:#f6f8fb;
+    transform:translateX(0); opacity:1; pointer-events:auto;
+    transition:transform var(--slide-dur) var(--slide-ease), opacity var(--slide-dur) ease-out;
+    will-change:transform, opacity;
+  }
+  .screen.hidden{opacity:0; pointer-events:none}
+  .screen.off-right{transform:translateX(100%); opacity:0; pointer-events:none}
+  .screen.off-left{transform:translateX(-10%); opacity:.0; pointer-events:none}
+
+  /* Picker screen specific */
+  .picker-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
+  .picker-title{height:var(--head-h); padding:12px 16px 8px; display:flex; align-items:center; justify-content:space-between}
+  .search-wrap{padding:10px 12px;background:#fff;border-bottom:1px solid var(--line)}
+  .search-wrap input{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:14px; outline:none;
+    background:#f8fafc;
+  }
+  .picker-content{flex:1; overflow:auto; background:#f6f8fb; padding-bottom:var(--footer-h);}
+
+  /* Details screen */
+  .details-body{padding:12px}
+  .details-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+  .details-card .h{font-weight:800;color:#0F2D56;margin-bottom:8px}
+  .details-card .p{font-size:13px;color:#475569;margin:6px 0;line-height:1.5}
+  .details-actions{display:flex;gap:10px; padding:8px 12px}
+  .primary-btn{background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:12px;padding:10px 14px;font-size:13px;cursor:pointer}
+  .secondary-btn{background:#fff;color:#0F2D56;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13px;cursor:pointer}
+  .mini-btn{padding:6px 10px;font-size:12px;border-radius:8px}
+
+  /* Small inline list for selected journeys on main screen */
+  .journey-list{list-style:none;margin:8px 0 0;padding:0}
+  .journey-list li{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#f8fbff;margin-top:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .journey-list .date{font-size:12px;color:#667085}
+  .journey-pill{padding:4px 8px;border-radius:999px;border:1px solid var(--pill-border);background:var(--pill);font-weight:700;font-size:11px;color:#0F2D56}
+  .journey-list .view-btn{flex:0 0 120px;text-align:center} /* NEW: fixed width 'View Journey' */
+
+  /* ---------- NEW: Date Modal ---------- */
+  .center-overlay{position:absolute; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,45,86,.28); z-index:60}
+  .center-overlay.show{display:flex}
+  .dialog{width:86%; max-width:360px; background:#fff; border:1px solid var(--pill-border); border-radius:16px; box-shadow:0 18px 40px rgba(15,45,86,.18); padding:14px}
+  .dialog-head{font-weight:800;color:#0F2D56;margin-bottom:8px}
+  .dialog-body{font-size:13px;color:#475569;margin-bottom:12px}
+  .dialog-row{display:flex; gap:10px; justify-content:flex-end}
+  .dialog input[type="date"]{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; font-size:13px; margin-top:6px}
 </style>
 </head>
 <body>
@@ -91,7 +154,8 @@
       <div class="logo"><span class="bot"></span><span>SEGWiK</span></div>
     </div>
 
-    <div class="page-head">
+    <!-- ORIGINAL MAIN PAGE HEADER -->
+    <div class="page-head" id="mainHeader">
       <div class="page-title">
         <div class="left-row">
           <div class="back" onclick="history.back()">
@@ -102,32 +166,88 @@
       </div>
     </div>
 
-    <div class="content">
-      <section class="card">
-        <div class="card-head"><span class="emoji">👥</span><div class="card-title">Important Connections</div></div>
-        <div class="card-body">This contact doesn't have any important connections. Want to remember a spouse, child or even a pet?</div>
-        <div class="action-center"><div class="action-text">+ Add Connection</div></div>
-      </section>
+    <!-- NEW: SCREEN STACK -->
+    <div class="screens" id="screenStack">
+      <!-- Screen 1: Main Contact Details -->
+      <div class="screen" id="screen-main">
+        <div class="content">
+          <section class="card">
+            <div class="card-head"><span class="emoji">👥</span><div class="card-title">Important Connections</div></div>
+            <div class="card-body">This contact doesn't have any important connections. Want to remember a spouse, child or even a pet?</div>
+            <div class="action-center"><div class="action-text">+ Add Connection</div></div>
+          </section>
 
-      <section class="card">
-        <div class="card-head"><span class="emoji">🗓️</span><div class="card-title">Important Life Dates</div></div>
-        <div class="card-body">This contact doesn't have any important dates yet. Want to remember a birthday, a goal or a big milestone?</div>
-        <div class="action-center"><div class="action-text">+ Add Important Date</div></div>
-      </section>
+          <section class="card">
+            <div class="card-head"><span class="emoji">🗓️</span><div class="card-title">Important Life Dates</div></div>
+            <div class="card-body">This contact doesn't have any important dates yet. Want to remember a birthday, a goal or a big milestone?</div>
+            <div class="action-center"><div class="action-text">+ Add Important Date</div></div>
+          </section>
 
-      <section class="card">
-        <div class="card-head"><span class="emoji">📈</span><div class="card-title">Journey Status</div></div>
-        <div class="card-body">This contact doesn't have any journeys. Want to add any journeys?</div>
-        <div class="action-center">
-          <div class="action-text" id="addJourneyLink">+ Add Journey</div>
+          <section class="card" id="journeyCard">
+            <div class="card-head"><span class="emoji">📈</span><div class="card-title">Journey Status</div></div>
+            <div class="card-body" id="journeyCardBody">
+              <div id="journeyPlaceholder">This contact doesn't have any journeys. Want to add any journeys?</div>
+              <ul class="journey-list" id="journeyList" style="display:none;"></ul>
+            </div>
+            <div class="action-center">
+              <div class="action-text" id="addJourneyLink">+ Add Journey</div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head"><span class="emoji">✅</span><div class="card-title">Tasks, Issues & Unanswered Questions</div></div>
+            <div class="card-body" style="text-align:center;font-weight:600">Coming Soon...</div>
+          </section>
         </div>
-      </section>
+      </div>
 
-      <section class="card">
-        <div class="card-head"><span class="emoji">✅</span><div class="card-title">Tasks, Issues & Unanswered Questions</div></div>
-        <div class="card-body" style="text-align:center;font-weight:600">Coming Soon...</div>
-      </section>
+      <!-- Screen 2: Journey Picker (search + categories + direct Add) -->
+      <div class="screen off-right hidden" id="screen-picker" aria-hidden="true">
+        <div class="picker-head">
+          <div class="picker-title">
+            <div class="left-row">
+              <div class="back" id="pickerBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              </div>
+              <div class="title-text">Add Journey</div>
+            </div>
+          </div>
+          <div class="search-wrap">
+            <input type="search" id="journeySearch" placeholder="Search journeys or categories..." />
+          </div>
+        </div>
+        <div class="picker-content">
+          <div id="pickerAccordion" style="padding:12px"></div>
+        </div>
+      </div>
+
+      <!-- Screen 3: Journey Details full screen -->
+      <div class="screen off-right hidden" id="screen-details" aria-hidden="true">
+        <div class="picker-head">
+          <div class="picker-title">
+            <div class="left-row">
+              <div class="back" id="detailsBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              </div>
+              <div class="title-text" id="detailsTitle">Journey Details</div>
+            </div>
+          </div>
+        </div>
+        <div class="details-body">
+          <div class="details-card">
+            <div class="h" id="detailsName">Journey Name</div>
+            <div class="p"><strong>Best For:</strong> <span id="detailsBestFor"></span></div>
+            <div class="p"><strong>Ideal Contacts:</strong> <span id="detailsIdeal"></span></div>
+            <div class="p"><strong>Goal:</strong> <span id="detailsGoal"></span></div>
+          </div>
+          <div class="details-actions">
+            <button class="primary-btn" id="detailsAddBtn">Add to Journey</button>
+            <button class="secondary-btn" id="detailsCancelBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
     </div>
+    <!-- /NEW: SCREEN STACK -->
 
     <div class="tray" id="footer-tray">
       <div class="ibtn" data-icon="phone"></div>
@@ -149,6 +269,21 @@
     </div>
     <!-- /Journey Picker Overlay -->
 
+    <!-- NEW: Centered Date Modal -->
+    <div id="dateModal" class="center-overlay" onclick="if(event.target.id==='dateModal'){closeDateModal(false)}">
+      <div class="dialog" onclick="event.stopPropagation()">
+        <div class="dialog-head">Estimated Journey Completion Date</div>
+        <div class="dialog-body">
+          <input type="date" id="dateInput">
+        </div>
+        <div class="dialog-row">
+          <button class="secondary-btn" id="dateNotNow">Not Now</button>
+          <button class="primary-btn" id="dateContinue">Continue</button>
+        </div>
+      </div>
+    </div>
+    <!-- /Centered Date Modal -->
+
   </div>
 </div>
 
@@ -157,8 +292,8 @@
 function icon(name){
   switch(name){
     case 'mail': return `<svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>`;
-    case 'phone': return `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.11a2 2 0 0 1 2.11-.45c.84 .27 1.71 .45 2.61 .57A2 2 0  0 1 22 16.92z"/></svg>`;
-    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>`;
+    case 'phone': return `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0  0 1 4.11 2h3a2 2 0  0 1 2 1.72c.12 .9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0  0 0 6 6l1.47-1.11a2 2 0 0 1 2.11-.45c.84 .27 1.71 .45 2.61 .57A2 2 0  0 1 22 16.92z"/></svg>`;
+    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0  0 1-4 4H8l-5 3V7a4 4 0  0 1 4-4h10a4 4 0  0 1 4 4z"/></svg>`;
     case 'calendar': return `<svg viewBox="0 0 24 24"><path d="M3 8h18M5 4h14v16H5z"/><path d="M16 2v4M8 2v4"/></svg>`;
     case 'note': return `<svg viewBox="0 0 24 24"><path d="M4 3h14l2 2v16H4z"/><path d="M9 13h6M9 9h6M9 17h3"/></svg>`;
   }
@@ -229,38 +364,272 @@ const JOURNEYS = [
   }
 ];
 
-/* ---------- Overlay helpers ---------- */
+/* ---------- Overlay helpers (preserved; not used for new screens) ---------- */
 function showSheet(id){ document.getElementById(id).classList.add('show'); }
 function closeSheet(id){ document.getElementById(id).classList.remove('show'); }
 function overlayClose(e,id){ if(e.target.id===id) closeSheet(id); }
 
-/* ---------- Build accordion UI ---------- */
+/* ---------- Build accordion UI for new picker screen ---------- */
 function openJourneyPicker(){
-  const body = document.getElementById('journeyBody');
-  body.innerHTML = JOURNEYS.map((block, i) => `
-    <div class="acc" data-idx="${i}">
-      <div class="acc-head" onclick="toggleCategory(${i})">
-        <div class="acc-title">${block.cat}</div>
-        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="acc-panel">
-        ${block.items.map((it,j)=>`
-          <div class="jitem" onclick="revealJourney(${i},${j},event)">
-            <div class="name">${it.name}</div>
-            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-  currentOpen = null;
-  currentDetail = null;
-  showSheet('journeyOverlay');
+  buildPickerAccordion();
+  navigateTo('screen-picker');
 }
 
+/* State for accordion open/close (used by both old/new renders) */
 let currentOpen = null;   // index of open category
 let currentDetail = null; // {i,j,el}
 
+/* ---------- NEW: Screen Navigation ---------- */
+const screens = {
+  main: document.getElementById('screen-main'),
+  picker: document.getElementById('screen-picker'),
+  details: document.getElementById('screen-details')
+};
+let navStack = ['screen-main']; // simple stack of ids
+
+function updateHeaderVisibility(){
+  const header = document.getElementById('mainHeader');
+  const topId = navStack[navStack.length - 1];
+  // Hide "Contact Details" header on screens 2 & 3
+  header.classList.toggle('hidden', topId !== 'screen-main');
+}
+
+function navigateTo(id){
+  const currentId = navStack[navStack.length - 1];
+  if(currentId === id) return;
+
+  const from = document.getElementById(currentId);
+  const to = document.getElementById(id);
+
+  // Prepare target off-canvas, ensure visible
+  to.classList.remove('hidden','off-left');
+  to.classList.add('off-right');
+
+  // double-RAF for smoother start of animation
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    from.classList.add('off-left');
+    to.classList.remove('off-right');
+  }));
+
+  // After transition completes, hide previous
+  setTimeout(()=>{
+    from.classList.add('hidden');
+    from.classList.remove('off-left');
+  }, 380); // a hair longer than var(--slide-dur)
+
+  navStack.push(id);
+  updateHeaderVisibility();
+}
+
+function navigateBack(){
+  if(navStack.length <= 1) return;
+  const fromId = navStack.pop();
+  const toId = navStack[navStack.length - 1];
+
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+
+  to.classList.remove('hidden','off-left','off-right');
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    from.classList.add('off-right');
+  }));
+
+  setTimeout(()=>{
+    from.classList.add('hidden');
+    from.classList.remove('off-right');
+  }, 380);
+
+  updateHeaderVisibility();
+}
+
+/* ---------- NEW: Build Picker (Screen 2) ---------- */
+function buildPickerAccordion(filterText=''){
+  const host = document.getElementById('pickerAccordion');
+  const query = (filterText || '').trim().toLowerCase();
+
+  const blocks = JOURNEYS.map((block, i) => {
+    const catMatch = block.cat.toLowerCase().includes(query);
+    const items = block.items.filter(it =>
+      !query ||
+      catMatch ||
+      it.name.toLowerCase().includes(query)
+    );
+
+    if(!items.length) return '';
+
+    return `
+      <div class="acc" data-idx="${i}">
+        <div class="acc-head" onclick="toggleCategoryPicker(${i})" aria-expanded="false">
+          <div class="acc-title">${block.cat}</div>
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="acc-panel">
+          ${items.map((it)=>`
+            <div class="jitem" onclick="openJourneyDetails(${i}, ${getOriginalIndex(i,it.name)})">
+              <div class="name">${it.name}</div>
+              <button class="add-btn small" onclick="event.stopPropagation(); promptAddFromPicker(${i}, ${getOriginalIndex(i,it.name)})">Add to Journey</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  host.innerHTML = blocks;
+
+  // Auto-unfold categories containing matches when searching
+  currentOpen = null;
+  if(query){
+    // open all matched categories to reveal results
+    JOURNEYS.forEach((block, i)=>{
+      const hasMatch = block.cat.toLowerCase().includes(query) ||
+        block.items.some(it => it.name.toLowerCase().includes(query));
+      if(hasMatch){ setOpenPicker(i, true, true); }
+    });
+    const firstMatch = host.querySelector('.jitem');
+    if(firstMatch){
+      setTimeout(()=>firstMatch.scrollIntoView({behavior:'smooth', block:'start'}), 0);
+    }
+  }
+}
+
+/* Helper to find original index j by name within category i */
+function getOriginalIndex(i, name){
+  return JOURNEYS[i].items.findIndex(it => it.name === name);
+}
+
+/* Smooth accordion open/close with simultaneous folding of the other open one */
+function toggleCategoryPicker(i){
+  if(currentOpen !== null && currentOpen !== i){
+    // fold the previously open while opening the new one
+    setOpenPicker(currentOpen, false);
+    setOpenPicker(i, true);
+    currentOpen = i;
+  }else{
+    const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
+    const isOpen = acc && acc.classList.contains('open');
+    setOpenPicker(i, !isOpen);
+    currentOpen = !isOpen ? i : null;
+  }
+}
+
+/* Measure-and-animate helper */
+function setOpenPicker(i, open, immediate=false){
+  const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
+  if(!acc) return;
+  const head = acc.querySelector('.acc-head');
+  const panel = acc.querySelector('.acc-panel');
+
+  if(open){
+    acc.classList.add('open');
+    head.setAttribute('aria-expanded','true');
+    // set to measured height for smooth expansion
+    panel.style.paddingTop = '0px'; panel.style.paddingBottom = '0px'; // ensure stable padding anim
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    if(immediate){
+      // after transition, allow natural height changes
+      panel.addEventListener('transitionend', function onEnd(e){
+        if(e.propertyName === 'max-height'){
+          panel.style.maxHeight = 'none';
+          panel.removeEventListener('transitionend', onEnd);
+        }
+      });
+    }else{
+      // double-RAF to ensure measurement is applied smoothly
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }));
+      panel.addEventListener('transitionend', function onEnd(e){
+        if(e.propertyName === 'max-height'){
+          panel.style.maxHeight = 'none';
+          panel.removeEventListener('transitionend', onEnd);
+        }
+      });
+    }
+  }else{
+    head.setAttribute('aria-expanded','false');
+    // if currently 'auto' (none), set to measured height first, then 0 to animate close
+    if(getComputedStyle(panel).maxHeight === 'none'){
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    }
+    // next frame collapse
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      panel.style.maxHeight = '0px';
+    }));
+    acc.classList.remove('open');
+  }
+}
+
+/* Search behavior with unfold on match */
+document.getElementById('journeySearch').addEventListener('input', (e)=>{
+  buildPickerAccordion(e.target.value);
+});
+
+/* ---------- NEW: Journey Details (Screen 3) ---------- */
+let detailsContext = {i:null,j:null};
+
+function openJourneyDetails(i,j){
+  detailsContext = {i,j};
+  const data = JOURNEYS[i].items[j];
+  document.getElementById('detailsTitle').textContent = 'Journey Details';
+  document.getElementById('detailsName').textContent = data.name;
+  document.getElementById('detailsBestFor').textContent = data.bestFor;
+  document.getElementById('detailsIdeal').textContent = data.ideal;
+  document.getElementById('detailsGoal').textContent = data.goal;
+
+  navigateTo('screen-details');
+}
+
+/* Add journey from details screen -> show date modal */
+document.getElementById('detailsAddBtn').addEventListener('click', ()=>{
+  const {i,j} = detailsContext;
+  if(i===null || j===null) return;
+  const data = JOURNEYS[i].items[j];
+  openDateModal({source:'details', name:data.name});
+});
+
+/* Cancel button on details screen */
+document.getElementById('detailsCancelBtn').addEventListener('click', navigateBack);
+
+/* Back buttons for new screens */
+document.getElementById('pickerBackBtn').addEventListener('click', navigateBack);
+document.getElementById('detailsBackBtn').addEventListener('click', navigateBack);
+
+/* ---------- Add from Picker (Screen 2 button) ---------- */
+function promptAddFromPicker(i,j){
+  const data = JOURNEYS[i].items[j];
+  openDateModal({source:'picker', name:data.name});
+}
+
+/* ---------- Main card list management ---------- */
+const selectedJourneys = []; // {name, est}
+
+function addJourneyToCard(name, estDate){
+  selectedJourneys.push({name, est: estDate || ''});
+  renderJourneyList();
+}
+
+function renderJourneyList(){
+  const list = document.getElementById('journeyList');
+  const placeholder = document.getElementById('journeyPlaceholder');
+
+  if(selectedJourneys.length === 0){
+    list.style.display = 'none';
+    placeholder.style.display = '';
+    return;
+  }
+
+  // Hide empty-state text once we have at least one journey
+  placeholder.style.display = 'none';
+
+  list.style.display = 'block';
+  list.innerHTML = selectedJourneys.map(j=>{
+    return `<li><span>${j.name}</span><button class="secondary-btn mini-btn view-btn">View Journey</button></li>`;
+  }).join('');
+}
+
+/* ---------- Old overlay detail helpers (preserved; not used now) ---------- */
 function toggleCategory(i){
   if(currentOpen !== null && currentOpen !== i){
     setOpen(currentOpen, false);
@@ -272,13 +641,11 @@ function toggleCategory(i){
     removeDetail();
   }
 }
-
 function setOpen(i, open){
   const acc = document.querySelector(`.acc[data-idx="${i}"]`);
   if(!acc) return;
   acc.classList.toggle('open', open);
 }
-
 function revealJourney(i,j,evt){
   if(currentDetail && currentDetail.i===i && currentDetail.j===j){
     removeDetail(); return;
@@ -303,19 +670,16 @@ function revealJourney(i,j,evt){
   anchor.insertAdjacentElement('afterend', detail);
   currentDetail = {i,j,el:detail};
 
-  /* ensure it's fully visible, even for the last item */
   setTimeout(() => {
     detail.scrollIntoView({behavior:'smooth', block:'end'});
   }, 0);
 }
-
 function removeDetail(){
   if(currentDetail && currentDetail.el){
     currentDetail.el.remove();
   }
   currentDetail = null;
 }
-
 function addJourney(name){
   closeSheet('journeyOverlay');
   flashToast(`Added “${name}” to this contact.`);
@@ -329,7 +693,6 @@ function flashToast(text){
     t = document.createElement('div');
     t.id = 'seg-toast';
     t.style.position='absolute';
-    /* push below status/header and ensure on top */
     t.style.top='calc(var(--status-h) + 10px)';
     t.style.left='50%';
     t.style.transform='translateX(-50%) translateY(-120%)';
@@ -355,8 +718,51 @@ function flashToast(text){
   }, 2000);
 }
 
-/* open the picker */
+/* ---------- NEW: Date Modal logic ---------- */
+let dateModalContext = null; // {source:'picker'|'details', name:string}
+
+function openDateModal(ctx){
+  dateModalContext = ctx || null;
+  const modal = document.getElementById('dateModal');
+  const input = document.getElementById('dateInput');
+  // default to +14 days
+  const dt = new Date();
+  dt.setDate(dt.getDate()+14);
+  input.value = dt.toISOString().slice(0,10);
+  modal.classList.add('show');
+}
+
+function closeDateModal(shouldAdd, dateValue){
+  const modal = document.getElementById('dateModal');
+  modal.classList.remove('show');
+
+  if(shouldAdd && dateModalContext){
+    addJourneyToCard(dateModalContext.name, dateValue || '');
+    flashToast(`Added “${dateModalContext.name}” to this contact.`);
+    // navigate back to main screen from either source
+    if(navStack[navStack.length-1] === 'screen-details'){
+      navigateBack(); // details -> picker
+      setTimeout(()=>navigateBack(), 30); // picker -> main
+    } else if(navStack[navStack.length-1] === 'screen-picker'){
+      navigateBack(); // picker -> main
+    }
+  }
+  dateModalContext = null;
+}
+
+document.getElementById('dateNotNow').addEventListener('click', ()=>{
+  closeDateModal(true, '');
+});
+document.getElementById('dateContinue').addEventListener('click', ()=>{
+  const val = document.getElementById('dateInput').value || '';
+  closeDateModal(true, val);
+});
+
+/* open the picker (wired from main screen link) */
 document.getElementById('addJourneyLink').addEventListener('click', openJourneyPicker);
+
+// initialize header visibility on load
+updateHeaderVisibility();
 </script>
 </body>
 </html>
