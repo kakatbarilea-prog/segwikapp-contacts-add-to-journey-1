@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -29,7 +29,7 @@
 
   .status{height:var(--status-h);padding:0 16px;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid var(--line);background:#fff;z-index:5}
   .status .logo{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.3px}
-  .status .logo .bot{width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#e9f0ff,#dfe9ff);display:grid;place-items:center;border:1px solid #c9d7ff}
+  .status .logo .bot{width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#e9f0ff,#dfe1ff);display:grid;place-items:center;border:1px solid #c9d7ff}
   .status .logo .bot::before{content:"";width:10px;height:6px;border-radius:3px;display:block;background:#0F2D56;box-shadow:0 0 0 2px #b7ccff inset}
 
   .page-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
@@ -46,7 +46,7 @@
   .card-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
   .card-head .emoji{font-size:20px}
   .card-title{font-weight:800;font-size:16px}
-  .card-body{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+  .card-body{font-size:13px;color:#667085;line-height:1.5;margin-bottom:10px}
   .action-center{display:flex;justify-content:center}
   .action-text{font-weight:700;color:#0F2D56;cursor:pointer;text-align:center;font-size:13px}
 
@@ -66,7 +66,6 @@
   .sheet-title{font-weight:800;color:#0F2D56}
   .x{width:28px;height:28px;border-radius:8px;border:1px solid #e4ecff;background:#eef4ff;display:grid;place-items:center;cursor:pointer}
   .x:hover{filter:brightness(.96)}
-  /* more bottom padding so the last button never clips */
   #journeyBody{overflow:auto; padding-bottom:80px}
 
   /* Accordion categories */
@@ -81,21 +80,17 @@
     transition:max-height var(--acc-dur) var(--acc-ease), padding var(--acc-dur) var(--acc-ease);
     will-change:max-height;
   }
-  .acc.open .acc-panel{ /* keep for fallback; JS sets exact max-height for buttery anims */
-    /* max-height is set inline for smooth animation */
-  }
 
   /* Journey item list */
   .jitem{display:flex;align-items:center;justify-content:space-between;padding:12px;border-top:1px solid #eef2f7;cursor:pointer;gap:8px}
   .jitem .name{font-size:13px;color:#243048;flex:1;min-width:0}
   .jitem svg{width:16px;height:16px;opacity:.6}
 
-  /* Journey detail reveal (used in old overlay; kept intact) */
   .jdetail{background:#f8fbff;border-top:1px dashed #dbe7ff;padding:10px 12px;line-height:1.4}
   .jdetail .h{font-weight:800;color:#0F2D56;margin-bottom:6px}
   .jdetail .p{font-size:12px;color:#475569;margin:4px 0}
   .add-btn{margin-top:10px;display:inline-block;background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer}
-  .add-btn.small{margin-top:0;padding:6px 10px;font-size:12px;border-radius:8px;flex:0 0 120px;text-align:center} /* fixed width for uniform size */
+  .add-btn.small{margin-top:0;padding:6px 10px;font-size:12px;border-radius:8px;flex:0 0 120px;text-align:center}
 
   /* ---------- NEW: In-app screen navigation (slide in/out) ---------- */
   .screens{position:relative;flex:1;overflow:hidden;background:#f6f8fb}
@@ -132,9 +127,8 @@
   /* Small inline list for selected journeys on main screen */
   .journey-list{list-style:none;margin:8px 0 0;padding:0}
   .journey-list li{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#f8fbff;margin-top:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .journey-list .date{font-size:12px;color:#667085}
   .journey-pill{padding:4px 8px;border-radius:999px;border:1px solid var(--pill-border);background:var(--pill);font-weight:700;font-size:11px;color:#0F2D56}
-  .journey-list .view-btn{flex:0 0 120px;text-align:center} /* NEW: fixed width 'View Journey' */
+  .journey-list .view-btn{flex:0 0 120px;text-align:center}
 
   /* ---------- NEW: Date Modal ---------- */
   .center-overlay{position:absolute; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,45,86,.28); z-index:60}
@@ -144,6 +138,50 @@
   .dialog-body{font-size:13px;color:#475569;margin-bottom:12px}
   .dialog-row{display:flex; gap:10px; justify-content:flex-end}
   .dialog input[type="date"]{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; font-size:13px; margin-top:6px}
+
+  /* ----------- NEW: Journey Workspace screen (280ms ease-in-out) ----------- */
+  .screen.workspace{
+    transition:transform 280ms ease-in-out, opacity 280ms ease-in-out;
+  }
+  .ws-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
+  .ws-title{height:var(--head-h); padding:12px 16px 8px; display:flex; align-items:center; justify-content:space-between}
+  .ws-title .title-text{font-weight:800;color:var(--accent);font-size:18px}
+
+  .ws-content{flex:1; overflow:auto; background:#f6f8fb; padding:12px 12px 88px}
+
+  .phase{border:1px solid var(--line); border-radius:14px; background:#fff; margin-bottom:10px; overflow:hidden}
+  .phase-head{display:flex; align-items:center; justify-content:space-between; padding:12px; cursor:pointer}
+  .phase-title{font-weight:800; color:#243048; font-size:14px}
+  .phase-meta{font-size:12px; color:#667085}
+  .pill{display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--pill-border); background:var(--pill); font-weight:700; font-size:11px; color:#0F2D56}
+  .phase-actions{display:flex; gap:8px; align-items:center}
+  .phase-complete{background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}
+
+  .phase-panel{overflow:hidden; max-height:0; transition:max-height 280ms ease-in-out, padding 280ms ease-in-out}
+  .phase.open .phase-panel{ /* max-height set inline for buttery anim */ }
+
+  .task{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-top:1px solid #eef2f7}
+  .task .t-left{min-width:0}
+  .task .t-title{font-weight:700; color:#243048; font-size:13px}
+  .task .t-meta{font-size:12px; color:#667085}
+  .task .t-actions{display:flex; gap:8px; align-items:center}
+  .btn-start{background:#fff;color:#0F2D56;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+  .kebab{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;display:grid;place-items:center;cursor:pointer}
+  .kebab:after{content:'⋯';font-size:18px;line-height:0;margin-top:-2px}
+
+  .kebab-menu{position:absolute; background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:6px; display:none; z-index:80}
+  .kebab-menu.show{display:block}
+  .kebab-menu button{display:block; width:100%; text-align:left; background:#fff; border:0; padding:8px 10px; font-size:12px; border-radius:8px; cursor:pointer}
+  .kebab-menu button:hover{background:#f6faff}
+
+  /* Smart Task bottom sheet */
+  .ws-overlay{position:absolute; inset:0; display:none; align-items:flex-end; background:rgba(15,45,86,.28); z-index:70}
+  .ws-overlay.show{display:flex}
+  .ws-sheet{width:100%; background:#fff; border-top:1px solid var(--pill-border); border-radius:18px 18px 0 0; box-shadow:0 18px 40px rgba(15,45,86,.18); padding:12px; transform:translateY(100%); transition:transform 250ms ease}
+  .ws-overlay.show .ws-sheet{transform:translateY(0)}
+  .ws-sheet .h{font-weight:800;color:#0F2D56;margin-bottom:8px}
+  .ws-sheet .field{width:100%; border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:13px; min-height:72px; background:#f8fafc}
+  .ws-sheet .row{display:flex; gap:10px; justify-content:flex-end; margin-top:10px}
 </style>
 </head>
 <body>
@@ -186,11 +224,11 @@
             </div>
           </section>
 
-   
+
         </div>
       </div>
 
-      <!-- Screen 2: Journey Picker (search + categories + direct Add) -->
+      <!-- Screen 2: Journey Picker -->
       <div class="screen off-right hidden" id="screen-picker" aria-hidden="true">
         <div class="picker-head">
           <div class="picker-title">
@@ -210,7 +248,7 @@
         </div>
       </div>
 
-      <!-- Screen 3: Journey Details full screen -->
+      <!-- Screen 3: Journey Details -->
       <div class="screen off-right hidden" id="screen-details" aria-hidden="true">
         <div class="picker-head">
           <div class="picker-title">
@@ -233,6 +271,24 @@
             <button class="primary-btn" id="detailsAddBtn">Add to Journey</button>
             <button class="secondary-btn" id="detailsCancelBtn">Cancel</button>
           </div>
+        </div>
+      </div>
+
+      <!-- NEW Screen 4: Journey Workspace -->
+      <div class="screen off-right hidden workspace" id="screen-workspace" aria-hidden="true">
+        <div class="ws-head">
+          <div class="ws-title">
+            <div class="left-row">
+              <div class="back" id="wsBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              </div>
+              <div class="title-text" id="wsTitle">Journey Workspace</div>
+            </div>
+          </div>
+        </div>
+        <div class="ws-content">
+          <div id="wsEmpty" style="display:none; color:#667085; font-size:13px">No phases yet. Add journeys and phases here.</div>
+          <div id="wsPhases"></div>
         </div>
       </div>
     </div>
@@ -273,6 +329,29 @@
     </div>
     <!-- /Centered Date Modal -->
 
+    <!-- NEW: Smart Task Bottom Sheet -->
+    <div id="taskModal" class="ws-overlay" onclick="if(event.target.id==='taskModal'){closeTaskModal()}">
+      <div class="ws-sheet" onclick="event.stopPropagation()">
+        <div class="h" id="taskModalTitle">Compose Email</div>
+        <textarea class="field" id="taskNotes" placeholder="Write your email..."></textarea>
+        <div class="row">
+          <button class="secondary-btn" id="taskCancelBtn">Cancel</button>
+          <button class="primary-btn" id="taskSendBtn">Send Email</button>
+        </div>
+      </div>
+    </div>
+    <!-- /Smart Task Bottom Sheet -->
+
+    <!-- Kebab context menu -->
+    <div id="kebabMenu" class="kebab-menu">
+      <button data-act="start">Start task</button>
+      <button data-act="assign">Assign task</button>
+      <button data-act="complete">Complete task</button>
+      <button data-act="queue">Queue task</button>
+      <button data-act="cancel">Cancel task</button>
+      <button data-act="pause">Pause task</button>
+    </div>
+
   </div>
 </div>
 
@@ -281,8 +360,8 @@
 function icon(name){
   switch(name){
     case 'mail': return `<svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>`;
-    case 'phone': return `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0  0 1 4.11 2h3a2 2 0  0 1 2 1.72c.12 .9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0  0 0 6 6l1.47-1.11a2 2 0 0 1 2.11-.45c.84 .27 1.71 .45 2.61 .57A2 2 0  0 1 22 16.92z"/></svg>`;
-    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0  0 1-4 4H8l-5 3V7a4 4 0  0 1 4-4h10a4 4 0  0 1 4 4z"/></svg>`;
+    case 'phone': return `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0  0 1-6-6 19.79 19.79 0  0 1-3.07-8.67A2 2 0  0 1 4.11 2h3a2 2 0  0 1 2 1.72c.12 .9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0  0 0 6 6l1.47-1.11a2 2 0 0 1 2.11-.45c.84 .27 1.71 .45 2.61 .57A2 2 0  0 1 22 16.92z"/></svg>`;
+    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0  0 1-4 4H8l-5 3V7a4 4 0  0 1 4-4h10a4 4 0  0  1 4 4z"/></svg>`;
     case 'calendar': return `<svg viewBox="0 0 24 24"><path d="M3 8h18M5 4h14v16H5z"/><path d="M16 2v4M8 2v4"/></svg>`;
     case 'note': return `<svg viewBox="0 0 24 24"><path d="M4 3h14l2 2v16H4z"/><path d="M9 13h6M9 9h6M9 17h3"/></svg>`;
   }
@@ -372,14 +451,14 @@ let currentDetail = null; // {i,j,el}
 const screens = {
   main: document.getElementById('screen-main'),
   picker: document.getElementById('screen-picker'),
-  details: document.getElementById('screen-details')
+  details: document.getElementById('screen-details'),
+  workspace: document.getElementById('screen-workspace')
 };
 let navStack = ['screen-main']; // simple stack of ids
 
 function updateHeaderVisibility(){
   const header = document.getElementById('mainHeader');
   const topId = navStack[navStack.length - 1];
-  // Hide "Contact Details" header on screens 2 & 3
   header.classList.toggle('hidden', topId !== 'screen-main');
 }
 
@@ -390,21 +469,18 @@ function navigateTo(id){
   const from = document.getElementById(currentId);
   const to = document.getElementById(id);
 
-  // Prepare target off-canvas, ensure visible
   to.classList.remove('hidden','off-left');
   to.classList.add('off-right');
 
-  // double-RAF for smoother start of animation
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     from.classList.add('off-left');
     to.classList.remove('off-right');
   }));
 
-  // After transition completes, hide previous
   setTimeout(()=>{
     from.classList.add('hidden');
     from.classList.remove('off-left');
-  }, 380); // a hair longer than var(--slide-dur)
+  }, 380);
 
   navStack.push(id);
   updateHeaderVisibility();
@@ -467,10 +543,8 @@ function buildPickerAccordion(filterText=''){
 
   host.innerHTML = blocks;
 
-  // Auto-unfold categories containing matches when searching
   currentOpen = null;
   if(query){
-    // open all matched categories to reveal results
     JOURNEYS.forEach((block, i)=>{
       const hasMatch = block.cat.toLowerCase().includes(query) ||
         block.items.some(it => it.name.toLowerCase().includes(query));
@@ -488,10 +562,8 @@ function getOriginalIndex(i, name){
   return JOURNEYS[i].items.findIndex(it => it.name === name);
 }
 
-/* Smooth accordion open/close with simultaneous folding of the other open one */
 function toggleCategoryPicker(i){
   if(currentOpen !== null && currentOpen !== i){
-    // fold the previously open while opening the new one
     setOpenPicker(currentOpen, false);
     setOpenPicker(i, true);
     currentOpen = i;
@@ -503,7 +575,6 @@ function toggleCategoryPicker(i){
   }
 }
 
-/* Measure-and-animate helper */
 function setOpenPicker(i, open, immediate=false){
   const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
   if(!acc) return;
@@ -513,11 +584,9 @@ function setOpenPicker(i, open, immediate=false){
   if(open){
     acc.classList.add('open');
     head.setAttribute('aria-expanded','true');
-    // set to measured height for smooth expansion
-    panel.style.paddingTop = '0px'; panel.style.paddingBottom = '0px'; // ensure stable padding anim
+    panel.style.paddingTop = '0px'; panel.style.paddingBottom = '0px';
     panel.style.maxHeight = panel.scrollHeight + 'px';
     if(immediate){
-      // after transition, allow natural height changes
       panel.addEventListener('transitionend', function onEnd(e){
         if(e.propertyName === 'max-height'){
           panel.style.maxHeight = 'none';
@@ -525,7 +594,6 @@ function setOpenPicker(i, open, immediate=false){
         }
       });
     }else{
-      // double-RAF to ensure measurement is applied smoothly
       requestAnimationFrame(()=>requestAnimationFrame(()=>{
         panel.style.maxHeight = panel.scrollHeight + 'px';
       }));
@@ -538,11 +606,9 @@ function setOpenPicker(i, open, immediate=false){
     }
   }else{
     head.setAttribute('aria-expanded','false');
-    // if currently 'auto' (none), set to measured height first, then 0 to animate close
     if(getComputedStyle(panel).maxHeight === 'none'){
       panel.style.maxHeight = panel.scrollHeight + 'px';
     }
-    // next frame collapse
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       panel.style.maxHeight = '0px';
     }));
@@ -609,14 +675,21 @@ function renderJourneyList(){
     return;
   }
 
-  // Hide empty-state text once we have at least one journey
   placeholder.style.display = 'none';
 
   list.style.display = 'block';
   list.innerHTML = selectedJourneys.map(j=>{
-    return `<li><span>${j.name}</span><button class="secondary-btn mini-btn view-btn">View Journey</button></li>`;
+    return `<li><span>${j.name}</span><button class="secondary-btn mini-btn view-btn" data-name="${j.name}">View Journey</button></li>`;
   }).join('');
 }
+
+/* Attach handler for dynamic "View Journey" buttons */
+document.getElementById('journeyList').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.view-btn');
+  if(!btn) return;
+  const jname = btn.getAttribute('data-name');
+  openWorkspace(jname);
+});
 
 /* ---------- Old overlay detail helpers (preserved; not used now) ---------- */
 function toggleCategory(i){
@@ -714,7 +787,6 @@ function openDateModal(ctx){
   dateModalContext = ctx || null;
   const modal = document.getElementById('dateModal');
   const input = document.getElementById('dateInput');
-  // default to +14 days
   const dt = new Date();
   dt.setDate(dt.getDate()+14);
   input.value = dt.toISOString().slice(0,10);
@@ -728,23 +800,348 @@ function closeDateModal(shouldAdd, dateValue){
   if(shouldAdd && dateModalContext){
     addJourneyToCard(dateModalContext.name, dateValue || '');
     flashToast(`Added “${dateModalContext.name}” to this contact.`);
-    // navigate back to main screen from either source
     if(navStack[navStack.length-1] === 'screen-details'){
-      navigateBack(); // details -> picker
-      setTimeout(()=>navigateBack(), 30); // picker -> main
+      navigateBack();
+      setTimeout(()=>navigateBack(), 30);
     } else if(navStack[navStack.length-1] === 'screen-picker'){
-      navigateBack(); // picker -> main
+      navigateBack();
     }
   }
   dateModalContext = null;
 }
 
-document.getElementById('dateNotNow').addEventListener('click', ()=>{
-  closeDateModal(true, '');
-});
+document.getElementById('dateNotNow').addEventListener('click', ()=>{ closeDateModal(true, ''); });
 document.getElementById('dateContinue').addEventListener('click', ()=>{
   const val = document.getElementById('dateInput').value || '';
   closeDateModal(true, val);
+});
+
+/* ---------- NEW: Journey Workspace Data + Logic ---------- */
+
+/* Phase/task definitions per journey */
+const JOURNEY_MAP = {
+  'Event High-Value Sales Meeting Journey': [
+    { title:'Automated Priority Outreach', tasks:[] },
+    { title:'Manual Direct Outreach', tasks:[{title:'Personalized high-touch message/call'}] },
+    { title:'Scheduling', tasks:[] },
+    { title:'High-Value Session', tasks:[] }
+  ],
+  'Event Warm Reconnect Journey': [
+    { title:'Automated Messaging Outreach', tasks:[] },
+    { title:'Manual Personal Outreach', tasks:[{title:'Casual follow-up note or call'}] },
+    { title:'Time Coordination', tasks:[] },
+    { title:'Follow-Up Meeting', tasks:[] }
+  ],
+  'Event Dormant Reconnect Journey': [
+    { title:'Automated Reconnect Outreach', tasks:[] },
+    { title:'Manual Memory Outreach', tasks:[{title:'Personal reminder of past contact'}] },
+    { title:'Calendar Setup', tasks:[] },
+    { title:'Reconnection Meeting', tasks:[] }
+  ],
+  'Event New Contact Follow-Up Journey': [
+    { title:'Automated Event Outreach', tasks:[] },
+    { title:'Manual Context Outreach', tasks:[{title:'Manual message referencing event conversation'}] },
+    { title:'Scheduling Coordination', tasks:[] },
+    { title:'Networking Session', tasks:[] }
+  ],
+  'Event Acknowledgment Journey': [
+    { title:'Automated Appreciation Outreach', tasks:[] },
+    { title:'Manual 30-Day Check-In', tasks:[] }
+  ],
+  'Event Urgent Demo Journey': [
+    { title:'Automated Rapid Outreach', tasks:[] },
+    { title:'Manual Urgency Outreach', tasks:[{title:'Confirm urgency with quick manual touchpoint'}] },
+    { title:'Demo Scheduling', tasks:[] },
+    { title:'Demo Session', tasks:[] }
+  ],
+  'Cold/General Meeting Request Journey': [
+    { title:'Automated Introductory Outreach', tasks:[] },
+    { title:'Manual Engagement Outreach', tasks:[{title:'Light manual follow-up (call, DM)'}] },
+    { title:'Appointment Setting', tasks:[] },
+    { title:'Discovery Session', tasks:[] }
+  ],
+  'Business Card Reactivate Journey': [
+    { title:'Automated Reactivation Outreach', tasks:[] },
+    { title:'Manual Follow-Up Outreach', tasks:[{title:'Personalized message or call to reintroduce yourself'}] },
+    { title:'Scheduling a Time', tasks:[] },
+    { title:'Reconnection Session', tasks:[] }
+  ]
+};
+
+/* runtime workspace state per journey */
+const workspaceState = {}; // { [journeyName]: { phases: [ {status, startedAt, tasks:[{status}] } ] } }
+
+function initWorkspaceState(name){
+  if(workspaceState[name]) return;
+  const base = JOURNEY_MAP[name] || [];
+  const phases = base.map(p=>({
+    title:p.title,
+    status:'Not Begun',
+    startedAt:null,
+    tasks:(p.tasks||[]).map(t=>({title:t.title, status:'Not Begun'}))
+  }));
+  // 1) First phase always Started; others Not Begun
+  if(phases.length){
+    phases[0].status = 'Started';
+    phases[0].startedAt = new Date().toISOString().slice(0,10);
+  }
+  workspaceState[name] = { phases };
+}
+
+/* Build the workspace UI */
+function openWorkspace(journeyName){
+  initWorkspaceState(journeyName);
+  document.getElementById('wsTitle').textContent = journeyName;
+  buildWorkspaceList(journeyName);
+  navigateTo('screen-workspace');
+}
+
+document.getElementById('wsBackBtn').addEventListener('click', navigateBack);
+
+/* Render phases with accordion behavior */
+let wsOpenIdx = null;
+
+function buildWorkspaceList(journeyName){
+  const wrap = document.getElementById('wsPhases');
+  const empty = document.getElementById('wsEmpty');
+  const data = workspaceState[journeyName];
+  if(!data || !data.phases.length){
+    empty.style.display='block';
+    wrap.innerHTML='';
+    return;
+  }
+  empty.style.display='none';
+
+  // default open: first not Completed
+  const firstNotCompleted = data.phases.findIndex(p=>p.status!=='Completed');
+  wsOpenIdx = firstNotCompleted >= 0 ? firstNotCompleted : 0;
+
+  wrap.innerHTML = data.phases.map((p,idx)=>{
+    const isOpen = idx===wsOpenIdx;
+    const statusLine = p.status==='Started'
+      ? `Status: Started • Started: ${p.startedAt || new Date().toISOString().slice(0,10)}`
+      : `Status: ${p.status}`;
+    const right = p.status==='Started'
+      ? `<button class="phase-complete" data-idx="${idx}" data-act="completePhase">Complete Phase</button>`
+      : `<span class="pill">${p.status || 'Not Begun'}</span>`;
+    const tasksHTML = p.tasks.length
+      ? p.tasks.map((t,tidx)=>`
+          <div class="task" data-phase="${idx}" data-task="${tidx}">
+            <div class="t-left">
+              <div class="t-title">${t.title}</div>
+              <div class="t-meta">Status: ${t.status}</div>
+            </div>
+            <div class="t-actions">
+              ${t.status!=='Completed' ? `<button class="btn-start" data-act="startTask">Start</button>` : ''}
+              <div class="kebab" data-act="menu"></div>
+            </div>
+          </div>
+        `).join('')
+      : `<div style="padding:12px;color:#667085;font-size:12px;border-top:1px solid #eef2f7">No tasks in this phase.</div>`;
+
+    return `
+      <div class="phase ${isOpen?'open':''}" data-idx="${idx}">
+        <div class="phase-head" data-act="toggle">
+          <div>
+            <div class="phase-title">${p.title}</div>
+            <div class="phase-meta">${statusLine}</div>
+          </div>
+          <div class="phase-actions">${right}</div>
+        </div>
+        <div class="phase-panel"${isOpen?' style="max-height:9999px; padding-bottom:4px"':''}>
+          ${tasksHTML}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  requestAnimationFrame(()=>{
+    const open = wrap.querySelector('.phase.open .phase-panel');
+    if(open){
+      open.style.maxHeight = open.scrollHeight+'px';
+    }
+  });
+}
+
+/* Accordion toggle (single open) + complete phase */
+document.getElementById('wsPhases').addEventListener('click', (e)=>{
+  const head = e.target.closest('.phase-head');
+  const completeBtn = e.target.closest('[data-act="completePhase"]');
+  const container = document.getElementById('wsPhases');
+  const journeyName = document.getElementById('wsTitle').textContent;
+  const state = workspaceState[journeyName];
+
+  if(completeBtn){
+    const idx = parseInt(completeBtn.getAttribute('data-idx'),10);
+    state.phases[idx].status = 'Completed';
+    if(state.phases[idx+1]){
+      state.phases[idx+1].status = 'Started';
+      state.phases[idx+1].startedAt = new Date().toISOString().slice(0,10);
+      wsOpenIdx = idx+1;
+    }else{
+      wsOpenIdx = idx;
+    }
+    buildWorkspaceList(journeyName);
+    flashToast(`Phase ${idx+1} completed.`);
+    return;
+  }
+
+  if(head){
+    const phaseEl = head.closest('.phase');
+    const idx = parseInt(phaseEl.getAttribute('data-idx'),10);
+
+    const currentlyOpen = container.querySelector('.phase.open');
+    if(currentlyOpen && currentlyOpen !== phaseEl){
+      const p1 = currentlyOpen.querySelector('.phase-panel');
+      if(getComputedStyle(p1).maxHeight === 'none'){
+        p1.style.maxHeight = p1.scrollHeight+'px';
+      }
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        p1.style.maxHeight = '0px';
+      }));
+      currentlyOpen.classList.remove('open');
+    }
+
+    const panel = phaseEl.querySelector('.phase-panel');
+    const isOpen = phaseEl.classList.contains('open');
+    if(isOpen){
+      if(getComputedStyle(panel).maxHeight === 'none'){
+        panel.style.maxHeight = panel.scrollHeight+'px';
+      }
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        panel.style.maxHeight = '0px';
+      }));
+      phaseEl.classList.remove('open');
+      wsOpenIdx = null;
+    }else{
+      phaseEl.classList.add('open');
+      panel.style.maxHeight = panel.scrollHeight+'px';
+      wsOpenIdx = idx;
+
+      // keep: opening a Not Begun phase marks it Started
+      const ph = state.phases[idx];
+      if(ph.status === 'Not Begun'){
+        ph.status = 'Started';
+        ph.startedAt = new Date().toISOString().slice(0,10);
+        const meta = phaseEl.querySelector('.phase-meta');
+        meta.textContent = `Status: Started • Started: ${ph.startedAt}`;
+        const actions = phaseEl.querySelector('.phase-actions');
+        actions.innerHTML = `<button class="phase-complete" data-idx="${idx}" data-act="completePhase">Complete Phase</button>`;
+      }
+    }
+  }
+});
+
+/* ---------- Task Actions ---------- */
+let activeTaskRef = null; // {phaseIdx, taskIdx, journey}
+
+const kebabMenu = document.getElementById('kebabMenu');
+
+document.getElementById('wsPhases').addEventListener('click', (e)=>{
+  const startBtn = e.target.closest('[data-act="startTask"]');
+  const kebab = e.target.closest('[data-act="menu"]');
+  const taskRow = e.target.closest('.task');
+  if(!taskRow) return;
+
+  const phaseIdx = parseInt(taskRow.getAttribute('data-phase'),10);
+  const taskIdx = parseInt(taskRow.getAttribute('data-task'),10);
+  const journey = document.getElementById('wsTitle').textContent;
+
+  if(startBtn){
+    activeTaskRef = {phaseIdx, taskIdx, journey};
+    openTaskModal(journey, phaseIdx, taskIdx);
+    return;
+  }
+
+  if(kebab){
+    activeTaskRef = {phaseIdx, taskIdx, journey};
+    // position menu near kebab and keep within phone bounds
+    const phone = document.querySelector('.phone');
+    const phoneRect = phone.getBoundingClientRect();
+    const rect = kebab.getBoundingClientRect();
+
+    // initial placement below and slightly left
+    let left = rect.left - phoneRect.left - 6;
+    let top = rect.bottom - phoneRect.top + 6;
+
+    kebabMenu.style.left = left + 'px';
+    kebabMenu.style.top = top + 'px';
+    kebabMenu.classList.add('show');
+
+    // after shown, clamp within phone
+    requestAnimationFrame(()=>{
+      const mRect = kebabMenu.getBoundingClientRect();
+      const pad = 6;
+      const maxLeft = phoneRect.width - mRect.width - pad;
+      const maxTop = phoneRect.height - mRect.height - pad;
+
+      if(left > maxLeft) left = Math.max(pad, maxLeft);
+      if(top > maxTop){
+        // flip above the kebab
+        top = rect.top - phoneRect.top - mRect.height - pad;
+        if(top < pad) top = pad;
+      }
+      if(left < pad) left = pad;
+
+      kebabMenu.style.left = left + 'px';
+      kebabMenu.style.top = top + 'px';
+    });
+    return;
+  }
+});
+
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('.kebab-menu') && !e.target.closest('.kebab')){
+    kebabMenu.classList.remove('show');
+  }
+});
+
+kebabMenu.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn || !activeTaskRef) return;
+  const act = btn.getAttribute('data-act');
+  const {journey, phaseIdx, taskIdx} = activeTaskRef;
+  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
+
+  if(act==='start') t.status = 'Started';
+  if(act==='complete') t.status = 'Completed';
+  if(act==='queue') t.status = 'Queued';
+  if(act==='cancel') t.status = 'Cancelled';
+  if(act==='pause') t.status = 'Paused';
+  // 'assign' no-op placeholder
+
+  buildWorkspaceList(journey);
+  kebabMenu.classList.remove('show');
+  activeTaskRef = null;
+});
+
+/* Smart Task modal (Compose Email) */
+function openTaskModal(journey, phaseIdx, taskIdx){
+  const modal = document.getElementById('taskModal');
+  const title = document.getElementById('taskModalTitle');
+  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
+  title.textContent = `Compose Email — ${t.title}`;
+  document.getElementById('taskNotes').value = '';
+  modal.classList.add('show');
+}
+function closeTaskModal(){
+  document.getElementById('taskModal').classList.remove('show');
+}
+
+document.getElementById('taskCancelBtn').addEventListener('click', ()=>{
+  closeTaskModal();
+  activeTaskRef = null;
+});
+document.getElementById('taskSendBtn').addEventListener('click', ()=>{
+  if(!activeTaskRef) return closeTaskModal();
+  const {journey, phaseIdx, taskIdx} = activeTaskRef;
+  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
+  // Simulate sending email: set to Started and toast
+  if(t.status==='Not Begun') t.status='Started';
+  buildWorkspaceList(journey);
+  closeTaskModal();
+  flashToast('Email sent.');
+  activeTaskRef = null;
 });
 
 /* open the picker (wired from main screen link) */
