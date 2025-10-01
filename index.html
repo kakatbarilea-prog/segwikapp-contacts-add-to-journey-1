@@ -29,7 +29,7 @@
 
   .status{height:var(--status-h);padding:0 16px;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid var(--line);background:#fff;z-index:5}
   .status .logo{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.3px}
-  .status .logo .bot{width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#e9f0ff,#dfe1ff);display:grid;place-items:center;border:1px solid #c9d7ff}
+  .status .logo .bot{width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#e9f0ff,#dfe9ff);display:grid;place-items:center;border:1px solid #c9d7ff}
   .status .logo .bot::before{content:"";width:10px;height:6px;border-radius:3px;display:block;background:#0F2D56;box-shadow:0 0 0 2px #b7ccff inset}
 
   .page-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
@@ -46,7 +46,7 @@
   .card-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
   .card-head .emoji{font-size:20px}
   .card-title{font-weight:800;font-size:16px}
-  .card-body{font-size:13px;color:#667085;line-height:1.5;margin-bottom:10px}
+  .card-body{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:10px}
   .action-center{display:flex;justify-content:center}
   .action-text{font-weight:700;color:#0F2D56;cursor:pointer;text-align:center;font-size:13px}
 
@@ -66,6 +66,7 @@
   .sheet-title{font-weight:800;color:#0F2D56}
   .x{width:28px;height:28px;border-radius:8px;border:1px solid #e4ecff;background:#eef4ff;display:grid;place-items:center;cursor:pointer}
   .x:hover{filter:brightness(.96)}
+  /* more bottom padding so the last button never clips */
   #journeyBody{overflow:auto; padding-bottom:80px}
 
   /* Accordion categories */
@@ -80,17 +81,21 @@
     transition:max-height var(--acc-dur) var(--acc-ease), padding var(--acc-dur) var(--acc-ease);
     will-change:max-height;
   }
+  .acc.open .acc-panel{ /* keep for fallback; JS sets exact max-height for buttery anims */
+    /* max-height is set inline for smooth animation */
+  }
 
   /* Journey item list */
   .jitem{display:flex;align-items:center;justify-content:space-between;padding:12px;border-top:1px solid #eef2f7;cursor:pointer;gap:8px}
   .jitem .name{font-size:13px;color:#243048;flex:1;min-width:0}
   .jitem svg{width:16px;height:16px;opacity:.6}
 
+  /* Journey detail reveal (used in old overlay; kept intact) */
   .jdetail{background:#f8fbff;border-top:1px dashed #dbe7ff;padding:10px 12px;line-height:1.4}
   .jdetail .h{font-weight:800;color:#0F2D56;margin-bottom:6px}
   .jdetail .p{font-size:12px;color:#475569;margin:4px 0}
   .add-btn{margin-top:10px;display:inline-block;background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:10px;padding:8px 12px;font-size:12px;cursor:pointer}
-  .add-btn.small{margin-top:0;padding:6px 10px;font-size:12px;border-radius:8px;flex:0 0 120px;text-align:center}
+  .add-btn.small{margin-top:0;padding:6px 10px;font-size:12px;border-radius:8px;flex:0 0 120px;text-align:center} /* fixed width for uniform size */
 
   /* ---------- NEW: In-app screen navigation (slide in/out) ---------- */
   .screens{position:relative;flex:1;overflow:hidden;background:#f6f8fb}
@@ -112,10 +117,12 @@
     width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:14px; outline:none;
     background:#f8fafc;
   }
+  .search-note{color:#858ca0;font-size:12px;margin:8px 12px 0} /* NEW: gray note */
+
   .picker-content{flex:1; overflow:auto; background:#f6f8fb; padding-bottom:var(--footer-h);}
 
   /* Details screen */
-  .details-body{padding:12px}
+  .details-body{padding:12px; flex:1; overflow:auto; scroll-behavior:smooth;} /* scroll smoothly */
   .details-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
   .details-card .h{font-weight:800;color:#0F2D56;margin-bottom:8px}
   .details-card .p{font-size:13px;color:#475569;margin:6px 0;line-height:1.5}
@@ -123,65 +130,74 @@
   .primary-btn{background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:12px;padding:10px 14px;font-size:13px;cursor:pointer}
   .secondary-btn{background:#fff;color:#0F2D56;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13px;cursor:pointer}
   .mini-btn{padding:6px 10px;font-size:12px;border-radius:8px}
+  .milestone-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px dashed #e7eefb}
+  .milestone-row:first-child{border-top:0;padding-top:0}
+  .milestone-title{font-weight:700;color:#243048}
+  .milestone-input{display:flex;align-items:center;gap:10px}
+  .milestone-input input[type="date"]{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:13px}
+
+  /* Obvious snap highlight */
+  @keyframes snapPulse{
+    0%{box-shadow:0 0 0 0 rgba(15,45,86,0); background:#fff;}
+    20%{box-shadow:0 0 0 6px rgba(15,45,86,.12); background:#fffef3;}
+    60%{box-shadow:0 0 0 0 rgba(15,45,86,0); background:#fff;}
+    100%{box-shadow:0 0 0 0 rgba(15,45,86,0); background:#fff;}
+  }
+  .snap-highlight{animation:snapPulse 900ms ease-out;}
 
   /* Small inline list for selected journeys on main screen */
   .journey-list{list-style:none;margin:8px 0 0;padding:0}
   .journey-list li{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#f8fbff;margin-top:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .journey-list .date{font-size:12px;color:#667085}
   .journey-pill{padding:4px 8px;border-radius:999px;border:1px solid var(--pill-border);background:var(--pill);font-weight:700;font-size:11px;color:#0F2D56}
-  .journey-list .view-btn{flex:0 0 120px;text-align:center}
+  .journey-list .view-btn{flex:0 0 120px;text-align:center} /* NEW: fixed width 'View Journey' */
 
   /* ---------- NEW: Date Modal ---------- */
-  .center-overlay{position:absolute; inset:0; display:none; align-items:center; justify-content:center; background:rgba(15,45,86,.28); z-index:60}
-  .center-overlay.show{display:flex}
-  .dialog{width:86%; max-width:360px; background:#fff; border:1px solid var(--pill-border); border-radius:16px; box-shadow:0 18px 40px rgba(15,45,86,.18); padding:14px}
-  .dialog-head{font-weight:800;color:#0F2D56;margin-bottom:8px}
-  .dialog-body{font-size:13px;color:#475569;margin-bottom:12px}
-  .dialog-row{display:flex; gap:10px; justify-content:flex-end}
-  .dialog input[type="date"]{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; font-size:13px; margin-top:6px}
+  /* (removed per request) */
 
-  /* ----------- NEW: Journey Workspace screen (280ms ease-in-out) ----------- */
+  /* ======= NEW: Journey Workspace (phases/tasks) ======= */
+  /* workspace screen uses 280ms ease-in-out without touching others */
   .screen.workspace{
-    transition:transform 280ms ease-in-out, opacity 280ms ease-in-out;
+    transition:transform .28s ease-in-out, opacity .28s ease-in-out;
   }
-  .ws-head{position:sticky; top:0; z-index:4; background:#fff; border-bottom:1px solid var(--line)}
-  .ws-title{height:var(--head-h); padding:12px 16px 8px; display:flex; align-items:center; justify-content:space-between}
-  .ws-title .title-text{font-weight:800;color:var(--accent);font-size:18px}
+  .phase-card{background:#fff;border:1px solid var(--line);border-radius:14px;margin:10px 12px;overflow:hidden}
+  .phase-head{display:flex;align-items:center;justify-content:space-between;padding:12px;cursor:pointer;gap:10px}
+  .phase-title{font-weight:800}
+  .phase-meta{font-size:12px;color:var(--muted)}
+  .phase-right{display:flex;align-items:center;gap:8px}
+  .phase-pill{padding:4px 8px;border-radius:999px;border:1px solid var(--pill-border);background:var(--pill);
+    font-weight:700;font-size:11px;color:#0F2D56}
+  .phase-complete-btn{background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:10px;padding:6px 10px;font-size:12px;cursor:pointer}
 
-  .ws-content{flex:1; overflow:auto; background:#f6f8fb; padding:12px 12px 88px}
+  .phase-panel{max-height:0;overflow:hidden;transition:max-height .28s ease, padding .28s ease; padding:0 12px}
+  .phase-panel.open{padding:12px}
 
-  .phase{border:1px solid var(--line); border-radius:14px; background:#fff; margin-bottom:10px; overflow:hidden}
-  .phase-head{display:flex; align-items:center; justify-content:space-between; padding:12px; cursor:pointer}
-  .phase-title{font-weight:800; color:#243048; font-size:14px}
-  .phase-meta{font-size:12px; color:#667085}
-  .pill{display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--pill-border); background:var(--pill); font-weight:700; font-size:11px; color:#0F2D56}
-  .phase-actions{display:flex; gap:8px; align-items:center}
-  .phase-complete{background:#1d305e;color:#fff;border:1px solid #1d305e;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}
+  .task{border-top:1px dashed #e7eefb;padding:10px 0;font-size:13px;color:#475569;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .task .left .title{font-weight:800;color:#243048}
+  .task .left .status{font-size:12px;color:#667085;margin-top:4px}
+  .task .right{display:flex;align-items:center;gap:8px}
+  .task .start-btn{background:#fff;color:#0F2D56;border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12px;cursor:pointer}
+  .task .menu-btn{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;display:grid;place-items:center;cursor:pointer}
+  .kebab{width:16px;height:16px;display:block;position:relative}
+  .kebab::before{content:"";display:block;width:3px;height:3px;background:#243048;border-radius:50%;box-shadow:0 6px 0 #243048,0 -6px 0 #243048}
 
-  .phase-panel{overflow:hidden; max-height:0; transition:max-height 280ms ease-in-out, padding 280ms ease-in-out}
-  .phase.open .phase-panel{ /* max-height set inline for buttery anim */ }
+  /* contextual menu */
+  .menu-pop{position:absolute;z-index:80;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 28px rgba(0,0,0,.12);overflow:hidden}
+  .menu-pop button{display:block;width:200px;text-align:left;background:#fff;border:0;border-bottom:1px solid #f0f3f8;padding:10px 12px;font-size:13px;color:#243048;cursor:pointer}
+  .menu-pop button:last-child{border-bottom:0}
+  .menu-pop button:hover{background:#f6f9ff}
 
-  .task{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-top:1px solid #eef2f7}
-  .task .t-left{min-width:0}
-  .task .t-title{font-weight:700; color:#243048; font-size:13px}
-  .task .t-meta{font-size:12px; color:#667085}
-  .task .t-actions{display:flex; gap:8px; align-items:center}
-  .btn-start{background:#fff;color:#0F2D56;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
-  .kebab{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;display:grid;place-items:center;cursor:pointer}
-  .kebab:after{content:'⋯';font-size:18px;line-height:0;margin-top:-2px}
-
-  .kebab-menu{position:absolute; background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:6px; display:none; z-index:80}
-  .kebab-menu.show{display:block}
-  .kebab-menu button{display:block; width:100%; text-align:left; background:#fff; border:0; padding:8px 10px; font-size:12px; border-radius:8px; cursor:pointer}
-  .kebab-menu button:hover{background:#f6faff}
-
-  /* Smart Task bottom sheet */
-  .ws-overlay{position:absolute; inset:0; display:none; align-items:flex-end; background:rgba(15,45,86,.28); z-index:70}
-  .ws-overlay.show{display:flex}
-  .ws-sheet{width:100%; background:#fff; border-top:1px solid var(--pill-border); border-radius:18px 18px 0 0; box-shadow:0 18px 40px rgba(15,45,86,.18); padding:12px; transform:translateY(100%); transition:transform 250ms ease}
-  .ws-overlay.show .ws-sheet{transform:translateY(0)}
-  .ws-sheet .h{font-weight:800;color:#0F2D56;margin-bottom:8px}
-  .ws-sheet .field{width:100%; border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:13px; min-height:72px; background:#f8fafc}
-  .ws-sheet .row{display:flex; gap:10px; justify-content:flex-end; margin-top:10px}
+  /* Smart Task modal (bottom sheet) */
+  .task-overlay{position:absolute;inset:0;background:rgba(15,45,86,.28);display:none;align-items:flex-end;z-index:90}
+  .task-overlay.show{display:flex}
+  .task-sheet{width:100%;max-height:70%;background:#fff;border-top:1px solid var(--pill-border);border-radius:18px 18px 0 0;
+    box-shadow:0 18px 40px rgba(15,45,86,.18);transform:translateY(100%);transition:transform .25s ease}
+  .task-overlay.show .task-sheet{transform:translateY(0)}
+  .task-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .task-title{font-weight:800;color:#0F2D56}
+  .task-body{padding:12px 14px}
+  .task-body textarea{width:100%;min-height:120px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-family:inherit;font-size:13px}
+  .task-actions{display:flex;gap:10px;justify-content:flex-end;padding:12px 14px 16px;border-top:1px solid #f0f3f8}
 </style>
 </head>
 <body>
@@ -224,11 +240,11 @@
             </div>
           </section>
 
-
+   
         </div>
       </div>
 
-      <!-- Screen 2: Journey Picker -->
+      <!-- Screen 2: Journey Picker (search + categories + direct Add) -->
       <div class="screen off-right hidden" id="screen-picker" aria-hidden="true">
         <div class="picker-head">
           <div class="picker-title">
@@ -241,6 +257,7 @@
           </div>
           <div class="search-wrap">
             <input type="search" id="journeySearch" placeholder="Search journeys or categories..." />
+            <div class="search-note">Tip: Click a journey to view more details.</div>
           </div>
         </div>
         <div class="picker-content">
@@ -248,7 +265,7 @@
         </div>
       </div>
 
-      <!-- Screen 3: Journey Details -->
+      <!-- Screen 3: Journey Details full screen -->
       <div class="screen off-right hidden" id="screen-details" aria-hidden="true">
         <div class="picker-head">
           <div class="picker-title">
@@ -267,6 +284,19 @@
             <div class="p"><strong>Ideal Contacts:</strong> <span id="detailsIdeal"></span></div>
             <div class="p"><strong>Goal:</strong> <span id="detailsGoal"></span></div>
           </div>
+
+          <!-- NEW: Milestones section -->
+          <div class="details-card" id="milestonesSection">
+            <div class="h">Milestones</div>
+            <div id="milestonesList"></div>
+          </div>
+
+          <!-- NEW: Journey Estimated Completion Date field -->
+          <div class="details-card">
+            <div class="h">Estimated Journey Completion Date</div>
+            <input type="date" id="journeyEstInput" />
+          </div>
+
           <div class="details-actions">
             <button class="primary-btn" id="detailsAddBtn">Add to Journey</button>
             <button class="secondary-btn" id="detailsCancelBtn">Cancel</button>
@@ -274,23 +304,24 @@
         </div>
       </div>
 
-      <!-- NEW Screen 4: Journey Workspace -->
+      <!-- ===== Screen 4: Journey Workspace ===== -->
       <div class="screen off-right hidden workspace" id="screen-workspace" aria-hidden="true">
-        <div class="ws-head">
-          <div class="ws-title">
+        <div class="picker-head">
+          <div class="picker-title">
             <div class="left-row">
-              <div class="back" id="wsBackBtn">
+              <div class="back" id="workspaceBackBtn">
                 <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
               </div>
-              <div class="title-text" id="wsTitle">Journey Workspace</div>
+              <div class="title-text" id="workspaceTitle">Journey</div>
             </div>
           </div>
         </div>
-        <div class="ws-content">
-          <div id="wsEmpty" style="display:none; color:#667085; font-size:13px">No phases yet. Add journeys and phases here.</div>
-          <div id="wsPhases"></div>
+        <div class="content" id="workspaceBody" style="padding-bottom:96px;">
+          <!-- phases render here -->
         </div>
       </div>
+      <!-- /Screen 4 -->
+
     </div>
     <!-- /NEW: SCREEN STACK -->
 
@@ -315,42 +346,26 @@
     <!-- /Journey Picker Overlay -->
 
     <!-- NEW: Centered Date Modal -->
-    <div id="dateModal" class="center-overlay" onclick="if(event.target.id==='dateModal'){closeDateModal(false)}">
-      <div class="dialog" onclick="event.stopPropagation()">
-        <div class="dialog-head">Estimated Journey Completion Date</div>
-        <div class="dialog-body">
-          <input type="date" id="dateInput">
+    <!-- (removed per request) -->
+
+    <!-- Smart Task bottom sheet -->
+    <div id="taskModal" class="task-overlay" onclick="if(event.target.id==='taskModal'){closeTaskModal()}">
+      <div class="task-sheet" onclick="event.stopPropagation()">
+        <div class="task-head">
+          <div class="task-title" id="taskModalTitle">Task</div>
+          <div class="x" onclick="closeTaskModal()">×</div>
         </div>
-        <div class="dialog-row">
-          <button class="secondary-btn" id="dateNotNow">Not Now</button>
-          <button class="primary-btn" id="dateContinue">Continue</button>
+        <div class="task-body">
+          <div id="taskModalMeta" class="dialog-body" style="margin:0 0 10px;"></div>
+          <textarea id="taskNotes" placeholder="Notes, message body, or call outcome…"></textarea>
+        </div>
+        <div class="task-actions">
+          <button class="secondary-btn" id="taskSave">Save</button>
+          <button class="primary-btn" id="taskComplete">Complete Task</button>
         </div>
       </div>
     </div>
-    <!-- /Centered Date Modal -->
-
-    <!-- NEW: Smart Task Bottom Sheet -->
-    <div id="taskModal" class="ws-overlay" onclick="if(event.target.id==='taskModal'){closeTaskModal()}">
-      <div class="ws-sheet" onclick="event.stopPropagation()">
-        <div class="h" id="taskModalTitle">Compose Email</div>
-        <textarea class="field" id="taskNotes" placeholder="Write your email..."></textarea>
-        <div class="row">
-          <button class="secondary-btn" id="taskCancelBtn">Cancel</button>
-          <button class="primary-btn" id="taskSendBtn">Send Email</button>
-        </div>
-      </div>
-    </div>
-    <!-- /Smart Task Bottom Sheet -->
-
-    <!-- Kebab context menu -->
-    <div id="kebabMenu" class="kebab-menu">
-      <button data-act="start">Start task</button>
-      <button data-act="assign">Assign task</button>
-      <button data-act="complete">Complete task</button>
-      <button data-act="queue">Queue task</button>
-      <button data-act="cancel">Cancel task</button>
-      <button data-act="pause">Pause task</button>
-    </div>
+    <!-- /Smart Task bottom sheet -->
 
   </div>
 </div>
@@ -361,7 +376,7 @@ function icon(name){
   switch(name){
     case 'mail': return `<svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>`;
     case 'phone': return `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0  0 1-6-6 19.79 19.79 0  0 1-3.07-8.67A2 2 0  0 1 4.11 2h3a2 2 0  0 1 2 1.72c.12 .9.3 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0  0 0 6 6l1.47-1.11a2 2 0 0 1 2.11-.45c.84 .27 1.71 .45 2.61 .57A2 2 0  0 1 22 16.92z"/></svg>`;
-    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0  0 1-4 4H8l-5 3V7a4 4 0  0 1 4-4h10a4 4 0  0  1 4 4z"/></svg>`;
+    case 'chat': return `<svg viewBox="0 0 24 24"><path d="M21 15a4 4 0  0 1-4 4H8l-5 3V7a4 4 0  0 1 4-4h10a4 4 0  0 1 4 4z"/></svg>`;
     case 'calendar': return `<svg viewBox="0 0 24 24"><path d="M3 8h18M5 4h14v16H5z"/><path d="M16 2v4M8 2v4"/></svg>`;
     case 'note': return `<svg viewBox="0 0 24 24"><path d="M4 3h14l2 2v16H4z"/><path d="M9 13h6M9 9h6M9 17h3"/></svg>`;
   }
@@ -459,6 +474,7 @@ let navStack = ['screen-main']; // simple stack of ids
 function updateHeaderVisibility(){
   const header = document.getElementById('mainHeader');
   const topId = navStack[navStack.length - 1];
+  // Hide "Contact Details" header on screens 2,3,4
   header.classList.toggle('hidden', topId !== 'screen-main');
 }
 
@@ -469,18 +485,21 @@ function navigateTo(id){
   const from = document.getElementById(currentId);
   const to = document.getElementById(id);
 
+  // Prepare target off-canvas, ensure visible
   to.classList.remove('hidden','off-left');
   to.classList.add('off-right');
 
+  // double-RAF for smoother start of animation
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     from.classList.add('off-left');
     to.classList.remove('off-right');
   }));
 
+  // After transition completes, hide previous
   setTimeout(()=>{
     from.classList.add('hidden');
     from.classList.remove('off-left');
-  }, 380);
+  }, 380); // keep your global timing (workspace has its own CSS easing/duration)
 
   navStack.push(id);
   updateHeaderVisibility();
@@ -523,13 +542,18 @@ function buildPickerAccordion(filterText=''){
 
     if(!items.length) return '';
 
+    // When searching: render expanded, without any fold/unfold animation/effects
+    const searching = !!query;
+    const panelAttrs = searching ? `class="acc-panel" style="max-height:none;transition:none;padding-top:0;padding-bottom:0"` : `class="acc-panel"`;
+    const accClasses = searching ? `acc open` : `acc`;
+
     return `
-      <div class="acc" data-idx="${i}">
-        <div class="acc-head" onclick="toggleCategoryPicker(${i})" aria-expanded="false">
+      <div class="${accClasses}" data-idx="${i}">
+        <div class="acc-head" onclick="toggleCategoryPicker(${i})" aria-expanded="${searching ? 'true' : 'false'}">
           <div class="acc-title">${block.cat}</div>
           <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
         </div>
-        <div class="acc-panel">
+        <div ${panelAttrs}>
           ${items.map((it)=>`
             <div class="jitem" onclick="openJourneyDetails(${i}, ${getOriginalIndex(i,it.name)})">
               <div class="name">${it.name}</div>
@@ -543,18 +567,8 @@ function buildPickerAccordion(filterText=''){
 
   host.innerHTML = blocks;
 
+  // During search we DO NOT auto-fold/unfold or animate. When not searching, preserve normal behavior.
   currentOpen = null;
-  if(query){
-    JOURNEYS.forEach((block, i)=>{
-      const hasMatch = block.cat.toLowerCase().includes(query) ||
-        block.items.some(it => it.name.toLowerCase().includes(query));
-      if(hasMatch){ setOpenPicker(i, true, true); }
-    });
-    const firstMatch = host.querySelector('.jitem');
-    if(firstMatch){
-      setTimeout(()=>firstMatch.scrollIntoView({behavior:'smooth', block:'start'}), 0);
-    }
-  }
 }
 
 /* Helper to find original index j by name within category i */
@@ -562,19 +576,30 @@ function getOriginalIndex(i, name){
   return JOURNEYS[i].items.findIndex(it => it.name === name);
 }
 
+/* Smooth accordion open/close with simultaneous folding of the other open one (on user tap only) */
 function toggleCategoryPicker(i){
+  const accs = document.querySelectorAll('#pickerAccordion .acc');
+  const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
+  if(!acc) return;
+
+  const isSearching = (document.getElementById('journeySearch').value || '').trim().length > 0;
+  if(isSearching){
+    // While searching, categories stay open and do not animate.
+    return;
+  }
+
   if(currentOpen !== null && currentOpen !== i){
     setOpenPicker(currentOpen, false);
     setOpenPicker(i, true);
     currentOpen = i;
   }else{
-    const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
-    const isOpen = acc && acc.classList.contains('open');
+    const isOpen = acc.classList.contains('open');
     setOpenPicker(i, !isOpen);
     currentOpen = !isOpen ? i : null;
   }
 }
 
+/* Measure-and-animate helper */
 function setOpenPicker(i, open, immediate=false){
   const acc = document.querySelector(`#pickerAccordion .acc[data-idx="${i}"]`);
   if(!acc) return;
@@ -616,7 +641,7 @@ function setOpenPicker(i, open, immediate=false){
   }
 }
 
-/* Search behavior with unfold on match */
+/* Search behavior (no fold/unfold effects during search) */
 document.getElementById('journeySearch').addEventListener('input', (e)=>{
   buildPickerAccordion(e.target.value);
 });
@@ -633,15 +658,48 @@ function openJourneyDetails(i,j){
   document.getElementById('detailsIdeal').textContent = data.ideal;
   document.getElementById('detailsGoal').textContent = data.goal;
 
+  // Build milestones list for this journey
+  buildMilestones(data.name);
+
   navigateTo('screen-details');
 }
 
-/* Add journey from details screen -> show date modal */
+function buildMilestones(journeyName){
+  const list = document.getElementById('milestonesList');
+  const defs = (JOURNEY_PHASES[journeyName] || JOURNEY_PHASES._default);
+  const today = new Date().toISOString().slice(0,10);
+  list.innerHTML = defs.map((p, idx)=>`
+    <div class="milestone-row">
+      <div class="milestone-title">${p.title}</div>
+      <div class="milestone-input">
+        <label style="font-size:12px;color:#667085">Estimated Completion Date:</label>
+        <input type="date" data-milestone="${idx}" value="${today}" />
+      </div>
+    </div>
+  `).join('');
+
+  // default journey est also today +14 for convenience
+  const jEst = document.getElementById('journeyEstInput');
+  const dt = new Date(); dt.setDate(dt.getDate()+14);
+  jEst.value = dt.toISOString().slice(0,10);
+}
+
+/* Add journey from details screen -> FINAL SUBMISSION now */
 document.getElementById('detailsAddBtn').addEventListener('click', ()=>{
   const {i,j} = detailsContext;
   if(i===null || j===null) return;
   const data = JOURNEYS[i].items[j];
-  openDateModal({source:'details', name:data.name});
+
+  // collect overall journey estimated date
+  const est = document.getElementById('journeyEstInput').value || '';
+
+  addJourneyToCard(data.name, est);
+  flashToast(`Added “${data.name}” to this contact.`);
+
+  // Return to main screen
+  // details -> (back to) main
+  navigateBack(); // to picker
+  setTimeout(()=>navigateBack(), 30); // to main
 });
 
 /* Cancel button on details screen */
@@ -650,11 +708,44 @@ document.getElementById('detailsCancelBtn').addEventListener('click', navigateBa
 /* Back buttons for new screens */
 document.getElementById('pickerBackBtn').addEventListener('click', navigateBack);
 document.getElementById('detailsBackBtn').addEventListener('click', navigateBack);
+document.getElementById('workspaceBackBtn').addEventListener('click', ()=> {
+  navigateBack();
+});
 
 /* ---------- Add from Picker (Screen 2 button) ---------- */
+/* Do NOT submit; go to screen 3 and smooth-snap to Milestones with a pulse highlight */
+function snapToMilestones(){
+  const container = document.querySelector('#screen-details .details-body');
+  const target = document.getElementById('milestonesSection');
+  if(!container || !target) return;
+
+  const cr = container.getBoundingClientRect();
+  const tr = target.getBoundingClientRect();
+  const delta = tr.top - cr.top + container.scrollTop;
+
+  // Smooth programmatic scroll (falls back to instant if unsupported)
+  if (typeof container.scrollTo === 'function'){
+    container.scrollTo({ top: delta, behavior: 'smooth' });
+  } else {
+    container.scrollTop = delta;
+  }
+
+  // Obvious snap cue: pulse highlight on the Milestones card
+  target.classList.remove('snap-highlight'); // reset if already present
+  // slight delay so the highlight begins after scroll starts
+  setTimeout(()=>{ 
+    target.classList.add('snap-highlight'); 
+    // auto-clean the class after animation ends or after 1.2s fallback
+    const cleanup = ()=>target.classList.remove('snap-highlight');
+    target.addEventListener('animationend', cleanup, { once:true });
+    setTimeout(cleanup, 1200);
+  }, 120);
+}
+
 function promptAddFromPicker(i,j){
-  const data = JOURNEYS[i].items[j];
-  openDateModal({source:'picker', name:data.name});
+  openJourneyDetails(i,j);
+  // wait for slide transition + layout, then smooth-snap inside the details scroll container
+  setTimeout(()=>{ snapToMilestones(); }, 420);
 }
 
 /* ---------- Main card list management ---------- */
@@ -675,20 +766,26 @@ function renderJourneyList(){
     return;
   }
 
+  // Hide empty-state text once we have at least one journey
   placeholder.style.display = 'none';
 
   list.style.display = 'block';
-  list.innerHTML = selectedJourneys.map(j=>{
-    return `<li><span>${j.name}</span><button class="secondary-btn mini-btn view-btn" data-name="${j.name}">View Journey</button></li>`;
+  list.innerHTML = selectedJourneys.map((j,idx)=>{
+    return `<li data-jdx="${idx}">
+      <span>${j.name}</span>
+      <button class="secondary-btn mini-btn view-btn" data-view="${idx}">View Journey</button>
+    </li>`;
   }).join('');
 }
 
-/* Attach handler for dynamic "View Journey" buttons */
+/* View Journey button -> open workspace */
 document.getElementById('journeyList').addEventListener('click', (e)=>{
-  const btn = e.target.closest('.view-btn');
+  const btn = e.target.closest('[data-view]');
   if(!btn) return;
-  const jname = btn.getAttribute('data-name');
-  openWorkspace(jname);
+  const idx = parseInt(btn.getAttribute('data-view'),10);
+  const j = selectedJourneys[idx];
+  if(!j) return;
+  openWorkspace(j.name);
 });
 
 /* ---------- Old overlay detail helpers (preserved; not used now) ---------- */
@@ -781,368 +878,342 @@ function flashToast(text){
 }
 
 /* ---------- NEW: Date Modal logic ---------- */
-let dateModalContext = null; // {source:'picker'|'details', name:string}
+/* (removed per request) */
 
-function openDateModal(ctx){
-  dateModalContext = ctx || null;
-  const modal = document.getElementById('dateModal');
-  const input = document.getElementById('dateInput');
-  const dt = new Date();
-  dt.setDate(dt.getDate()+14);
-  input.value = dt.toISOString().slice(0,10);
-  modal.classList.add('show');
-}
+/* open the picker (wired from main screen link) */
+document.getElementById('addJourneyLink').addEventListener('click', openJourneyPicker);
 
-function closeDateModal(shouldAdd, dateValue){
-  const modal = document.getElementById('dateModal');
-  modal.classList.remove('show');
+// ======== NEW: Journey Workspace logic (phases + tasks) ========
 
-  if(shouldAdd && dateModalContext){
-    addJourneyToCard(dateModalContext.name, dateValue || '');
-    flashToast(`Added “${dateModalContext.name}” to this contact.`);
-    if(navStack[navStack.length-1] === 'screen-details'){
-      navigateBack();
-      setTimeout(()=>navigateBack(), 30);
-    } else if(navStack[navStack.length-1] === 'screen-picker'){
-      navigateBack();
-    }
-  }
-  dateModalContext = null;
-}
-
-document.getElementById('dateNotNow').addEventListener('click', ()=>{ closeDateModal(true, ''); });
-document.getElementById('dateContinue').addEventListener('click', ()=>{
-  const val = document.getElementById('dateInput').value || '';
-  closeDateModal(true, val);
-});
-
-/* ---------- NEW: Journey Workspace Data + Logic ---------- */
-
-/* Phase/task definitions per journey */
-const JOURNEY_MAP = {
+/* Full phases & tasks mapping */
+const JOURNEY_PHASES = {
   'Event High-Value Sales Meeting Journey': [
     { title:'Automated Priority Outreach', tasks:[] },
-    { title:'Manual Direct Outreach', tasks:[{title:'Personalized high-touch message/call'}] },
+    { title:'Manual Direct Outreach', tasks:[{ name:'Personalized high-touch message/call', status:'Queued' }] },
     { title:'Scheduling', tasks:[] },
-    { title:'High-Value Session', tasks:[] }
+    { title:'High-Value Session', tasks:[] },
   ],
   'Event Warm Reconnect Journey': [
     { title:'Automated Messaging Outreach', tasks:[] },
-    { title:'Manual Personal Outreach', tasks:[{title:'Casual follow-up note or call'}] },
+    { title:'Manual Personal Outreach', tasks:[{ name:'Casual follow-up note or call', status:'Queued' }] },
     { title:'Time Coordination', tasks:[] },
-    { title:'Follow-Up Meeting', tasks:[] }
+    { title:'Follow-Up Meeting', tasks:[] },
   ],
   'Event Dormant Reconnect Journey': [
     { title:'Automated Reconnect Outreach', tasks:[] },
-    { title:'Manual Memory Outreach', tasks:[{title:'Personal reminder of past contact'}] },
+    { title:'Manual Memory Outreach', tasks:[{ name:'Personal reminder of past contact', status:'Queued' }] },
     { title:'Calendar Setup', tasks:[] },
-    { title:'Reconnection Meeting', tasks:[] }
+    { title:'Reconnection Meeting', tasks:[] },
   ],
   'Event New Contact Follow-Up Journey': [
     { title:'Automated Event Outreach', tasks:[] },
-    { title:'Manual Context Outreach', tasks:[{title:'Manual message referencing event conversation'}] },
+    { title:'Manual Context Outreach', tasks:[{ name:'Manual message referencing event conversation', status:'Queued' }] },
     { title:'Scheduling Coordination', tasks:[] },
-    { title:'Networking Session', tasks:[] }
+    { title:'Networking Session', tasks:[] },
   ],
   'Event Acknowledgment Journey': [
     { title:'Automated Appreciation Outreach', tasks:[] },
-    { title:'Manual 30-Day Check-In', tasks:[] }
+    { title:'Manual 30-Day Check-In', tasks:[] },
   ],
   'Event Urgent Demo Journey': [
     { title:'Automated Rapid Outreach', tasks:[] },
-    { title:'Manual Urgency Outreach', tasks:[{title:'Confirm urgency with quick manual touchpoint'}] },
+    { title:'Manual Urgency Outreach', tasks:[{ name:'Confirm urgency with quick manual touchpoint', status:'Queued' }] },
     { title:'Demo Scheduling', tasks:[] },
-    { title:'Demo Session', tasks:[] }
+    { title:'Demo Session', tasks:[] },
   ],
   'Cold/General Meeting Request Journey': [
     { title:'Automated Introductory Outreach', tasks:[] },
-    { title:'Manual Engagement Outreach', tasks:[{title:'Light manual follow-up (call, DM)'}] },
+    { title:'Manual Engagement Outreach', tasks:[{ name:'Light manual follow-up (call, DM)', status:'Queued' }] },
     { title:'Appointment Setting', tasks:[] },
-    { title:'Discovery Session', tasks:[] }
+    { title:'Discovery Session', tasks:[] },
   ],
   'Business Card Reactivate Journey': [
     { title:'Automated Reactivation Outreach', tasks:[] },
-    { title:'Manual Follow-Up Outreach', tasks:[{title:'Personalized message or call to reintroduce yourself'}] },
+    { title:'Manual Follow-Up Outreach', tasks:[{ name:'Personalized message or call to reintroduce yourself', status:'Queued' }] },
     { title:'Scheduling a Time', tasks:[] },
-    { title:'Reconnection Session', tasks:[] }
+    { title:'Reconnection Session', tasks:[] },
+  ],
+  '_default': [
+    { title:'Phase 1', tasks:[] },
+    { title:'Phase 2', tasks:[] },
+    { title:'Phase 3', tasks:[] },
+    { title:'Phase 4', tasks:[] },
   ]
 };
 
-/* runtime workspace state per journey */
-const workspaceState = {}; // { [journeyName]: { phases: [ {status, startedAt, tasks:[{status}] } ] } }
+/* per-journey runtime state */
+const journeyState = new Map(); // journeyName -> { phases:[{title,status,startedAt,completedAt,tasks:[{name,status}]}], openIdx }
 
-function initWorkspaceState(name){
-  if(workspaceState[name]) return;
-  const base = JOURNEY_MAP[name] || [];
-  const phases = base.map(p=>({
-    title:p.title,
-    status:'Not Begun',
-    startedAt:null,
-    tasks:(p.tasks||[]).map(t=>({title:t.title, status:'Not Begun'}))
+/* ensure state with first phase Started, others Not Begun */
+function ensureJourneyState(journeyName){
+  if(journeyState.has(journeyName)) return journeyState.get(journeyName);
+  const def = JOURNEY_PHASES[journeyName] || JOURNEY_PHASES._default;
+  const phases = def.map((p, idx)=>({
+    title: p.title,
+    status: idx===0 ? 'Started' : 'Not Begun',
+    startedAt: idx===0 ? todayISO() : '',
+    completedAt: '',
+    tasks: (p.tasks||[]).map(t=>({ name:t.name, status:t.status||'Queued' }))
   }));
-  // 1) First phase always Started; others Not Begun
-  if(phases.length){
-    phases[0].status = 'Started';
-    phases[0].startedAt = new Date().toISOString().slice(0,10);
-  }
-  workspaceState[name] = { phases };
+  const st = { phases, openIdx: findFirstOpenIdx(phases) };
+  journeyState.set(journeyName, st);
+  return st;
 }
 
-/* Build the workspace UI */
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+function findFirstOpenIdx(phases){
+  // default open = first not Completed
+  const idx = phases.findIndex(p => p.status !== 'Completed');
+  return idx === -1 ? 0 : idx;
+}
+
 function openWorkspace(journeyName){
-  initWorkspaceState(journeyName);
-  document.getElementById('wsTitle').textContent = journeyName;
-  buildWorkspaceList(journeyName);
-  navigateTo('screen-workspace');
+  const st = ensureJourneyState(journeyName);
+  document.getElementById('workspaceTitle').textContent = journeyName;
+  renderWorkspace(journeyName);
+  navigateTo('screen-workspace'); // slides in (workspace screen has 280ms ease-in-out via CSS class)
 }
 
-document.getElementById('wsBackBtn').addEventListener('click', navigateBack);
-
-/* Render phases with accordion behavior */
-let wsOpenIdx = null;
-
-function buildWorkspaceList(journeyName){
-  const wrap = document.getElementById('wsPhases');
-  const empty = document.getElementById('wsEmpty');
-  const data = workspaceState[journeyName];
-  if(!data || !data.phases.length){
-    empty.style.display='block';
-    wrap.innerHTML='';
+function renderWorkspace(journeyName){
+  const host = document.getElementById('workspaceBody');
+  const st = journeyState.get(journeyName);
+  if(!st || !st.phases || st.phases.length===0){
+    host.innerHTML = `<div class="card" style="margin:12px">
+        <div class="card-title">No phases yet</div>
+        <div class="card-body">No phases yet. Add journeys and phases here.</div>
+      </div>`;
     return;
   }
-  empty.style.display='none';
 
-  // default open: first not Completed
-  const firstNotCompleted = data.phases.findIndex(p=>p.status!=='Completed');
-  wsOpenIdx = firstNotCompleted >= 0 ? firstNotCompleted : 0;
-
-  wrap.innerHTML = data.phases.map((p,idx)=>{
-    const isOpen = idx===wsOpenIdx;
+  host.innerHTML = st.phases.map((p,idx)=>{
+    const isOpen = st.openIdx === idx;
     const statusLine = p.status==='Started'
-      ? `Status: Started • Started: ${p.startedAt || new Date().toISOString().slice(0,10)}`
+      ? `Status: Started • Started: ${p.startedAt||todayISO()}`
       : `Status: ${p.status}`;
     const right = p.status==='Started'
-      ? `<button class="phase-complete" data-idx="${idx}" data-act="completePhase">Complete Phase</button>`
-      : `<span class="pill">${p.status || 'Not Begun'}</span>`;
-    const tasksHTML = p.tasks.length
+      ? `<button class="phase-complete-btn" data-complete="${idx}">Complete Phase</button>`
+      : `<span class="phase-pill">${p.status}</span>`;
+
+    const tasksHTML = (p.tasks && p.tasks.length)
       ? p.tasks.map((t,tidx)=>`
-          <div class="task" data-phase="${idx}" data-task="${tidx}">
-            <div class="t-left">
-              <div class="t-title">${t.title}</div>
-              <div class="t-meta">Status: ${t.status}</div>
+          <div class="task" data-task="${idx}:${tidx}">
+            <div class="left">
+              <div class="title">${t.name}</div>
+              <div class="status">Status: ${t.status}</div>
             </div>
-            <div class="t-actions">
-              ${t.status!=='Completed' ? `<button class="btn-start" data-act="startTask">Start</button>` : ''}
-              <div class="kebab" data-act="menu"></div>
+            <div class="right">
+              ${t.status!=='Completed' ? `<button class="start-btn" data-start="${idx}:${tidx}">Start</button>` : ``}
+              <button class="menu-btn" data-menu="${idx}:${tidx}"><span class="kebab"></span></button>
             </div>
           </div>
         `).join('')
-      : `<div style="padding:12px;color:#667085;font-size:12px;border-top:1px solid #eef2f7">No tasks in this phase.</div>`;
+      : `<div class="task" style="border-top:0;padding-top:0"><div class="left"><div class="status">No tasks in this phase.</div></div></div>`;
 
     return `
-      <div class="phase ${isOpen?'open':''}" data-idx="${idx}">
-        <div class="phase-head" data-act="toggle">
+      <div class="phase-card" data-phase="${idx}">
+        <div class="phase-head" data-toggle="${idx}">
           <div>
             <div class="phase-title">${p.title}</div>
             <div class="phase-meta">${statusLine}</div>
           </div>
-          <div class="phase-actions">${right}</div>
+          <div class="phase-right">
+            ${right}
+          </div>
         </div>
-        <div class="phase-panel"${isOpen?' style="max-height:9999px; padding-bottom:4px"':''}>
+        <div class="phase-panel ${isOpen?'open':''}" style="max-height:${isOpen? '999px':'0'}">
           ${tasksHTML}
         </div>
       </div>
     `;
   }).join('');
 
-  requestAnimationFrame(()=>{
-    const open = wrap.querySelector('.phase.open .phase-panel');
-    if(open){
-      open.style.maxHeight = open.scrollHeight+'px';
+  // bind handlers (event delegation)
+  host.onclick = (e)=>{
+    const completeBtn = e.target.closest('[data-complete]');
+    if(completeBtn){
+      const idx = parseInt(completeBtn.getAttribute('data-complete'),10);
+      completePhase(journeyName, idx);
+      return;
     }
+    const toggle = e.target.closest('[data-toggle]');
+    if(toggle){
+      const idx = parseInt(toggle.getAttribute('data-toggle'),10);
+      togglePhaseOpen(journeyName, idx);
+      return;
+    }
+    const startBtn = e.target.closest('[data-start]');
+    if(startBtn){
+      const [pIdx,tIdx] = startBtn.getAttribute('data-start').split(':').map(n=>parseInt(n,10));
+      openTaskModal(journeyName, pIdx, tIdx);
+      return;
+    }
+    const menuBtn = e.target.closest('[data-menu]');
+    if(menuBtn){
+      const [pIdx,tIdx] = menuBtn.getAttribute('data-menu').split(':').map(n=>parseInt(n,10));
+      openTaskMenu(menuBtn, journeyName, pIdx, tIdx);
+      return;
+    }
+  };
+}
+
+function togglePhaseOpen(journeyName, idx){
+  const st = journeyState.get(journeyName);
+  if(!st) return;
+  if(st.openIdx === idx) return; // only one open at a time
+  const host = document.getElementById('workspaceBody');
+  // close previous
+  const prev = host.querySelector(`.phase-card[data-phase="${st.openIdx}"] .phase-panel`);
+  if(prev){
+    prev.style.maxHeight = prev.scrollHeight+'px'; // set current height to animate close
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      prev.classList.remove('open');
+      prev.style.maxHeight = '0';
+    }));
+  }
+  // open new
+  const next = host.querySelector(`.phase-card[data-phase="${idx}"] .phase-panel`);
+  if(next){
+    next.style.maxHeight = next.scrollHeight+'px';
+    next.classList.add('open');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      next.style.maxHeight = '999px';
+    }));
+  }
+  st.openIdx = idx;
+}
+
+function completePhase(journeyName, idx){
+  const st = journeyState.get(journeyName);
+  if(!st) return;
+  const p = st.phases[idx];
+  if(!p) return;
+  p.status = 'Completed';
+  p.completedAt = todayISO();
+
+  // Start next phase if any
+  const nextIdx = idx + 1;
+  if(st.phases[nextIdx]){
+    const np = st.phases[nextIdx];
+    if(np.status !== 'Completed'){
+      np.status = 'Started';
+      np.startedAt = todayISO();
+      st.openIdx = nextIdx; // open next
+    }
+  }
+  flashToast(`Phase ${idx+1} completed.`);
+  renderWorkspace(journeyName);
+}
+
+/* ===== Smart Task modal ===== */
+let taskCtx = null; // {journey, pIdx, tIdx}
+
+function openTaskModal(journeyName, pIdx, tIdx){
+  taskCtx = {journey:journeyName, pIdx, tIdx};
+  const st = journeyState.get(journeyName);
+  if(!st) return;
+  const task = st.phases[pIdx]?.tasks[tIdx];
+  if(!task) return;
+
+  document.getElementById('taskModalTitle').textContent = task.name;
+  document.getElementById('taskModalMeta').textContent = `Phase: ${st.phases[pIdx].title} • Current status: ${task.status}`;
+  document.getElementById('taskNotes').value = '';
+
+  const modal = document.getElementById('taskModal');
+  modal.classList.add('show'); // slides up (250ms)
+}
+
+function closeTaskModal(){
+  const modal = document.getElementById('taskModal');
+  modal.classList.remove('show');
+  taskCtx = null;
+}
+
+document.getElementById('taskSave').addEventListener('click', ()=>{
+  if(!taskCtx) return closeTaskModal();
+  const st = journeyState.get(taskCtx.journey);
+  const t = st?.phases[taskCtx.pIdx]?.tasks[taskCtx.tIdx];
+  if(t){
+    if(t.status==='Queued' || t.status==='Paused' || t.status==='Cancelled'){
+      t.status = 'Started'; // "Save" keeps as Started if it wasn't
+    }
+  }
+  renderWorkspace(taskCtx.journey);
+  closeTaskModal();
+});
+
+document.getElementById('taskComplete').addEventListener('click', ()=>{
+  if(!taskCtx) return closeTaskModal();
+  const st = journeyState.get(taskCtx.journey);
+  const t = st?.phases[taskCtx.pIdx]?.tasks[taskCtx.tIdx];
+  if(t){
+    t.status = 'Completed';
+  }
+  renderWorkspace(taskCtx.journey);
+  closeTaskModal();
+});
+
+/* ===== Task 3-dot menu ===== */
+let activeMenuEl = null;
+
+function openTaskMenu(anchorEl, journeyName, pIdx, tIdx){
+  closeTaskMenu(); // ensure only one
+  const menu = document.createElement('div');
+  menu.className = 'menu-pop';
+  menu.innerHTML = `
+    <button data-act="Start">Start task</button>
+    <button data-act="Assign">Assign task</button>
+    <button data-act="Completed">Complete task</button>
+    <button data-act="Queued">Queue task</button>
+    <button data-act="Cancelled">Cancel task</button>
+    <button data-act="Paused">Pause task</button>
+  `;
+  document.body.appendChild(menu);
+  activeMenuEl = menu;
+
+  const rect = anchorEl.getBoundingClientRect();
+  const phoneRect = document.querySelector('.phone').getBoundingClientRect();
+  const left = phoneRect.left + rect.left - phoneRect.left - 172;
+  const top = phoneRect.top + rect.top - phoneRect.top + 28;
+  menu.style.left = Math.max(12, left) + 'px';
+  menu.style.top = Math.max(12, top) + 'px';
+
+  const closeOnAny = (ev)=>{
+    if(menu.contains(ev.target)) return;
+    document.removeEventListener('click', closeOnAny);
+    closeTaskMenu();
+  };
+  setTimeout(()=>document.addEventListener('click', closeOnAny),0);
+
+  menu.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const act = btn.getAttribute('data-act');
+    applyTaskStatus(journeyName, pIdx, tIdx, act);
+    closeTaskMenu();
   });
 }
 
-/* Accordion toggle (single open) + complete phase */
-document.getElementById('wsPhases').addEventListener('click', (e)=>{
-  const head = e.target.closest('.phase-head');
-  const completeBtn = e.target.closest('[data-act="completePhase"]');
-  const container = document.getElementById('wsPhases');
-  const journeyName = document.getElementById('wsTitle').textContent;
-  const state = workspaceState[journeyName];
-
-  if(completeBtn){
-    const idx = parseInt(completeBtn.getAttribute('data-idx'),10);
-    state.phases[idx].status = 'Completed';
-    if(state.phases[idx+1]){
-      state.phases[idx+1].status = 'Started';
-      state.phases[idx+1].startedAt = new Date().toISOString().slice(0,10);
-      wsOpenIdx = idx+1;
-    }else{
-      wsOpenIdx = idx;
-    }
-    buildWorkspaceList(journeyName);
-    flashToast(`Phase ${idx+1} completed.`);
-    return;
+function closeTaskMenu(){
+  if(activeMenuEl){
+    activeMenuEl.remove();
+    activeMenuEl = null;
   }
-
-  if(head){
-    const phaseEl = head.closest('.phase');
-    const idx = parseInt(phaseEl.getAttribute('data-idx'),10);
-
-    const currentlyOpen = container.querySelector('.phase.open');
-    if(currentlyOpen && currentlyOpen !== phaseEl){
-      const p1 = currentlyOpen.querySelector('.phase-panel');
-      if(getComputedStyle(p1).maxHeight === 'none'){
-        p1.style.maxHeight = p1.scrollHeight+'px';
-      }
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        p1.style.maxHeight = '0px';
-      }));
-      currentlyOpen.classList.remove('open');
-    }
-
-    const panel = phaseEl.querySelector('.phase-panel');
-    const isOpen = phaseEl.classList.contains('open');
-    if(isOpen){
-      if(getComputedStyle(panel).maxHeight === 'none'){
-        panel.style.maxHeight = panel.scrollHeight+'px';
-      }
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        panel.style.maxHeight = '0px';
-      }));
-      phaseEl.classList.remove('open');
-      wsOpenIdx = null;
-    }else{
-      phaseEl.classList.add('open');
-      panel.style.maxHeight = panel.scrollHeight+'px';
-      wsOpenIdx = idx;
-
-      // keep: opening a Not Begun phase marks it Started
-      const ph = state.phases[idx];
-      if(ph.status === 'Not Begun'){
-        ph.status = 'Started';
-        ph.startedAt = new Date().toISOString().slice(0,10);
-        const meta = phaseEl.querySelector('.phase-meta');
-        meta.textContent = `Status: Started • Started: ${ph.startedAt}`;
-        const actions = phaseEl.querySelector('.phase-actions');
-        actions.innerHTML = `<button class="phase-complete" data-idx="${idx}" data-act="completePhase">Complete Phase</button>`;
-      }
-    }
-  }
-});
-
-/* ---------- Task Actions ---------- */
-let activeTaskRef = null; // {phaseIdx, taskIdx, journey}
-
-const kebabMenu = document.getElementById('kebabMenu');
-
-document.getElementById('wsPhases').addEventListener('click', (e)=>{
-  const startBtn = e.target.closest('[data-act="startTask"]');
-  const kebab = e.target.closest('[data-act="menu"]');
-  const taskRow = e.target.closest('.task');
-  if(!taskRow) return;
-
-  const phaseIdx = parseInt(taskRow.getAttribute('data-phase'),10);
-  const taskIdx = parseInt(taskRow.getAttribute('data-task'),10);
-  const journey = document.getElementById('wsTitle').textContent;
-
-  if(startBtn){
-    activeTaskRef = {phaseIdx, taskIdx, journey};
-    openTaskModal(journey, phaseIdx, taskIdx);
-    return;
-  }
-
-  if(kebab){
-    activeTaskRef = {phaseIdx, taskIdx, journey};
-    // position menu near kebab and keep within phone bounds
-    const phone = document.querySelector('.phone');
-    const phoneRect = phone.getBoundingClientRect();
-    const rect = kebab.getBoundingClientRect();
-
-    // initial placement below and slightly left
-    let left = rect.left - phoneRect.left - 6;
-    let top = rect.bottom - phoneRect.top + 6;
-
-    kebabMenu.style.left = left + 'px';
-    kebabMenu.style.top = top + 'px';
-    kebabMenu.classList.add('show');
-
-    // after shown, clamp within phone
-    requestAnimationFrame(()=>{
-      const mRect = kebabMenu.getBoundingClientRect();
-      const pad = 6;
-      const maxLeft = phoneRect.width - mRect.width - pad;
-      const maxTop = phoneRect.height - mRect.height - pad;
-
-      if(left > maxLeft) left = Math.max(pad, maxLeft);
-      if(top > maxTop){
-        // flip above the kebab
-        top = rect.top - phoneRect.top - mRect.height - pad;
-        if(top < pad) top = pad;
-      }
-      if(left < pad) left = pad;
-
-      kebabMenu.style.left = left + 'px';
-      kebabMenu.style.top = top + 'px';
-    });
-    return;
-  }
-});
-
-document.addEventListener('click', (e)=>{
-  if(!e.target.closest('.kebab-menu') && !e.target.closest('.kebab')){
-    kebabMenu.classList.remove('show');
-  }
-});
-
-kebabMenu.addEventListener('click', (e)=>{
-  const btn = e.target.closest('button');
-  if(!btn || !activeTaskRef) return;
-  const act = btn.getAttribute('data-act');
-  const {journey, phaseIdx, taskIdx} = activeTaskRef;
-  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
-
-  if(act==='start') t.status = 'Started';
-  if(act==='complete') t.status = 'Completed';
-  if(act==='queue') t.status = 'Queued';
-  if(act==='cancel') t.status = 'Cancelled';
-  if(act==='pause') t.status = 'Paused';
-  // 'assign' no-op placeholder
-
-  buildWorkspaceList(journey);
-  kebabMenu.classList.remove('show');
-  activeTaskRef = null;
-});
-
-/* Smart Task modal (Compose Email) */
-function openTaskModal(journey, phaseIdx, taskIdx){
-  const modal = document.getElementById('taskModal');
-  const title = document.getElementById('taskModalTitle');
-  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
-  title.textContent = `Compose Email — ${t.title}`;
-  document.getElementById('taskNotes').value = '';
-  modal.classList.add('show');
-}
-function closeTaskModal(){
-  document.getElementById('taskModal').classList.remove('show');
 }
 
-document.getElementById('taskCancelBtn').addEventListener('click', ()=>{
-  closeTaskModal();
-  activeTaskRef = null;
-});
-document.getElementById('taskSendBtn').addEventListener('click', ()=>{
-  if(!activeTaskRef) return closeTaskModal();
-  const {journey, phaseIdx, taskIdx} = activeTaskRef;
-  const t = workspaceState[journey].phases[phaseIdx].tasks[taskIdx];
-  // Simulate sending email: set to Started and toast
-  if(t.status==='Not Begun') t.status='Started';
-  buildWorkspaceList(journey);
-  closeTaskModal();
-  flashToast('Email sent.');
-  activeTaskRef = null;
-});
+function applyTaskStatus(journeyName, pIdx, tIdx, act){
+  const st = journeyState.get(journeyName);
+  const t = st?.phases[pIdx]?.tasks[tIdx];
+  if(!t) return;
+  if(act==='Assign'){
+    flashToast('Assign flow coming soon');
+    return;
+  }
+  if(['Start','Queued','Cancelled','Paused','Completed'].includes(act)){
+    t.status = (act==='Start') ? 'Started' : act;
+    renderWorkspace(journeyName);
+  }
+}
 
 /* open the picker (wired from main screen link) */
 document.getElementById('addJourneyLink').addEventListener('click', openJourneyPicker);
